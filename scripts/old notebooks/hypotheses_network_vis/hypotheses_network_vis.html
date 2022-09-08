@@ -1,0 +1,1267 @@
+<html>
+  <head>
+    <script src="https://cdn.amcharts.com/lib/4/core.js"></script>
+    <script src="https://cdn.amcharts.com/lib/4/charts.js"></script>
+    <script src="https://cdn.amcharts.com/lib/4/plugins/forceDirected.js"></script>
+    <script src="https://cdn.amcharts.com/lib/4/themes/moonrisekingdom.js"></script>
+    <script src="https://cdn.amcharts.com/lib/4/themes/animated.js"></script>
+    <div id="chartdiv"></div>
+ 
+    <style type="text/css">
+      html, body, #container {
+        width: 100%;
+        height: 100%;
+        margin: 0;
+        padding: 0;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="container"></div>
+    <script>
+        am4core.ready(function() {
+
+        // Themes begin
+        am4core.useTheme(am4themes_animated);
+        // Themes end
+
+
+
+        var chart = am4core.create("chartdiv", am4plugins_forceDirected.ForceDirectedTree);
+        var networkSeries = chart.series.push(new am4plugins_forceDirected.ForceDirectedSeries())
+
+        chart.data = 
+        [       
+          // CLUSTER DARWIN LOWER PART
+
+          {name: "Limiting Similarity",
+            link: ["Darwin's Normalization","Empty niche","Ecologoical naviety",
+            "Novel weapons","Adaption"],
+            value:33,
+            fixed: true,
+            
+            pie: [{
+              category: "Sup",
+              value: 19,
+              color: am4core.color("#00ffbf"),
+            }, {
+              category: "Que",
+              value: 10,
+              color: am4core.color("#ff4d4d")
+            }, {
+              category: "Und",
+              value: 4,
+              color: am4core.color("#A9A9A9")
+            }],
+            children: [
+            {
+                name: "Functional groups",
+                value: 28,
+                disabled: true,
+                pie: [{
+              category: "Sup",
+              color: am4core.color("#00ffbf"),
+              value: 16
+            }, {
+              category: "Que",
+              value: 9,
+              color: am4core.color("#ff4d4d")
+            }, {
+              category: "Und",
+              value: 3,
+              color: am4core.color("#A9A9A9")
+            }]
+            },
+            {
+              name : "Functional traits",
+              value:5,
+              disabled: true,
+              pie: [{
+              category: "Sup",
+              value: 4,
+              color: am4core.color("#00ffbf"),
+            }, {
+              category: "Que",
+              value: 1,
+              color: am4core.color("#ff4d4d")
+            }, {
+              category: "Und",
+              value: 1,
+              color: am4core.color("#A9A9A9")
+            }]
+
+            }
+
+
+            ]
+          }, // end first main node
+          {name: "Darwin's Normalization",
+            value:55,
+            fixed: true,
+            link: ["Empty niche","Island susceptibility","Ecologoical imbalance","Biotic resistance"],
+            pie: 
+            [{
+                category: "Sup",
+                value: 29,
+                color: am4core.color("#00ffbf"),
+              }, 
+              {
+                category: "Que",
+                value: 22,
+                color: am4core.color("#ff4d4d"),
+              }, 
+              {
+                category: "Und",
+                value: 4,
+                color: am4core.color("#A9A9A9")
+              }
+            ],
+            children: 
+            [ {
+                name: "PNND",
+                value: 15,
+                disabled: true,
+                pie: 
+                [
+                  {
+                    category: "Sup",
+                    value: 10,
+                    color: am4core.color("#00ffbf"),
+                  },
+                  {
+                    category: "Que",
+                    value: 5,
+                    color: am4core.color("#ff4d4d")
+                  },
+                ]
+              }, 
+              {
+                name: "MPD",
+                value: 15,
+                disabled: true,
+                pie: 
+                  [
+                    {
+                      category: "Sup",
+                      value: 8,
+                      color: am4core.color("#00ffbf"),
+                    },
+                    {
+                      category: "Que",
+                      value: 6,
+                      color: am4core.color("#ff4d4d")
+                    },
+                    {
+                      category: "Und",
+                      value: 1,
+                      color: am4core.color("#A9A9A9")
+                    }
+                  ]
+              }, //end second child
+              {
+                name: "Genus",
+                value: 20,
+                disabled: true,
+                pie:
+                [
+                  {
+                    category: "Sup",
+                    value: 12,
+                    color: am4core.color("#00ffbf"),
+                  },
+                  {
+                    category: "Que",
+                    value: 6,
+                    color: am4core.color("#ff4d4d")
+                  },
+                  {
+                    category: "Und",
+                      value: 2,
+                      color: am4core.color("#A9A9A9")
+                  }
+                ]
+              }, // end third child
+              {
+                name: "Family",
+                value: 5,
+                disabled: true,
+                pie:
+                [
+                  {
+                    category: "Sup",
+                    value: 4,
+                    color: am4core.color("#00ffbf"),
+                  },
+                  {
+                    category: "Qu",
+                    value: 1,
+                    color: am4core.color("#ff4d4d")
+                  } 
+                ]
+              } // end fourth child
+           ] //end children list
+
+
+
+          }, // end second darwin node
+          {name: "Island susceptibility",
+          value: 17,
+          fixed: true,
+          color: am4core.color("#CD5C5C"),
+          pie:
+          [
+            {
+              category: "Sup",
+              value: 5,
+              color: am4core.color("#00ffbf"),
+            },
+            {
+              category: "Que",
+              value: 8,
+              color: am4core.color("#ff4d4d")
+            },
+            {
+              category: "Und",
+              value: 4,
+              color: am4core.color("#A9A9A9")
+            }
+          ]
+          },
+          {name: "Biotic resistance",
+          value: 155,
+          //fixed: true
+          pie: 
+            [{
+                category: "Sup",
+                value: 47,
+                color: am4core.color("#00ffbf"),
+              }, 
+              {
+                category: "Que",
+                value: 81,
+                color: am4core.color("#ff4d4d"),
+              }, 
+              {
+                category: "Und",
+                value: 27,
+                color: am4core.color("#A9A9A9")
+              }
+            ],
+            children: 
+            [ {
+                name: "Native species richness",
+                value: 126,
+                disabled: true,
+                pie: 
+                [
+                  {
+                    category: "Sup",
+                    value: 36,
+                    color: am4core.color("#00ffbf"),
+                  },
+                  {
+                    category: "Que",
+                    value: 68,
+                    color: am4core.color("#ff4d4d")
+                  },
+                  {
+                  category: "Und",
+                  value: 22,
+                  color: am4core.color("#A9A9A9")
+              }
+                  
+                ],
+                children:
+                [
+                  {name: "Establishment success",
+                  value: 20,
+                  disabled: true,
+                  pie:
+                  [
+                    {
+                    category: "Sup",
+                    value: 19,
+                    color: am4core.color("#00ffbf"),
+                    },
+                    {
+                    category: "Que",
+                    value: 7,
+                    color: am4core.color("#ff4d4d")
+                    },
+                    {
+                    category: "Und",
+                    value: 3,
+                    color: am4core.color("#A9A9A9")
+                    }
+                  
+                ]
+                }, //end first child
+              {
+                name: "Non-native species richness",
+                value: 59,
+                disabled: true,
+                pie: 
+                  [
+                  {
+                    category: "Sup",
+                    value: 9,
+                    color: am4core.color("#00ffbf"),
+                  },
+                    {
+                      category: "Que",
+                      value: 42,
+                      color: am4core.color("#ff4d4d")
+                    },
+                    {
+                      category: "Und",
+                      value: 8,
+                      color: am4core.color("#A9A9A9")
+                    }
+                  ]
+              }, //end second child
+              {
+                name: "Abundance, biomass, cover",
+                value: 38,
+                disabled: true,
+                pie:
+                [
+                  {
+                    category: "Sup",
+                    value: 19,
+                    color: am4core.color("#00ffbf"),
+                  },
+                  {
+                    category: "Que",
+                    value: 11,
+                    color: am4core.color("#ff4d4d")
+                  },
+                  {
+                    category: "Und",
+                      value: 8,
+                      color: am4core.color("#A9A9A9")
+                  }
+                ]
+              }, // end third child
+              {
+                name: "Survival, growth, reproduction",
+                value: 10,
+                disabled: true,
+                pie:
+                [
+                  {
+                    category: "Sup",
+                    value: 4,
+                    color: am4core.color("#00ffbf"),
+                  },
+                  {
+                    category: "Que",
+                    value: 6,
+                    color: am4core.color("#ff4d4d")
+                  }
+                ]
+              }, // end fourth child
+              {
+                name: "other resistance measures",
+                value: 4,
+                disabled: true,
+                pie:
+                [
+                  {
+                    category: "Sup",
+                    value: 2,
+                    color: am4core.color("#00ffbf"),
+                  },
+                  {
+                    category: "Que",
+                    value: 2,
+                    color: am4core.color("#ff4d4d")
+                  }
+                ]
+              } // end fifth child
+           ] //end children list
+
+              }, //end first child
+              {
+                name: "Shannon index evenness",
+                value: 4,
+                disabled: true,
+                pie: 
+                  [
+                    {
+                      category: "Que",
+                      value: 2,
+                      color: am4core.color("#ff4d4d")
+                    },
+                    {
+                      category: "Und",
+                      value: 2,
+                      color: am4core.color("#A9A9A9")
+                    }
+                  ]
+              }, //end second child
+              {
+                name: "Functional richness",
+                value: 15,
+                disabled: true,
+                pie:
+                [
+                  {
+                    category: "Sup",
+                    value: 6,
+                    color: am4core.color("#00ffbf"),
+                  },
+                  {
+                    category: "Que",
+                    value: 7,
+                    color: am4core.color("#ff4d4d")
+                  },
+                  {
+                    category: "Und",
+                      value: 2,
+                      color: am4core.color("#A9A9A9")
+                  }
+                ]
+              }, // end third child
+              {
+                name: "Proxy",
+                value: 13,
+                disabled: true,
+                pie:
+                [
+                  {
+                    category: "Sup",
+                    value: 6,
+                    color: am4core.color("#00ffbf"),
+                  },
+                  {
+                    category: "Que",
+                    value: 6,
+                    color: am4core.color("#ff4d4d")
+                  } ,                  {
+                    category: "Und",
+                    value: 1,
+                    color: am4core.color("#A9A9A9")
+                  }
+                ]
+              } // end fourth child
+           ] //end children list
+          },
+          {name: "Empty niche",
+          value: 0,
+          //fixed: true,
+          link: ["Biotic acceptance","Biotic resistance"],
+          color: am4core.color("#CD5C5C")
+          },
+          /*{name: "Ecologoical imbalance",
+          value: 0,
+          //fixed: true,
+          link: ["Biotic acceptance","Island susceptibility"],
+          color: am4core.color("#CD5C5C")
+          },
+          {name: "Biotic acceptance",
+          value: 0,
+          color: am4core.color("#CD5C5C")
+          //fixed: true
+          },
+          {name: "Ecologoical naviety",
+          link: ["Limiting Similarity","Empty niche","Island susceptibility","Darwin's Normalization"],
+          value: 0,
+          //fixed: true,
+          color: am4core.color("#CD5C5C")
+          },*/
+
+
+          // CLUSTER DARWIN UPPER PART
+
+          {name: "Phenotypic plasticity",
+          value:115,
+          //fixed: true,
+          pie: 
+          [{
+              category: "Sup",
+              value: 70,
+              color: am4core.color("#00ffbf"),
+            }, 
+            {
+              category: "Que",
+              value: 18,
+              color: am4core.color("#ff4d4d"),
+            }, 
+            {
+              category: "Und",
+              value: 27,
+              color: am4core.color("#A9A9A9")
+            }
+          ],
+          children: 
+          [ {
+              name: "Morphology",
+              value: 43,
+              disabled: true,
+              pie: 
+              [
+                {
+                  category: "Sup",
+                  value: 31,
+                  color: am4core.color("#00ffbf"),
+                },
+                {
+                  category: "Que",
+                  value: 4,
+                  color: am4core.color("#ff4d4d")
+                },
+                {
+                  category: "Und",
+                  value: 8,
+                  color: am4core.color("#A9A9A9")
+
+
+                }
+              ]
+            }, 
+            {
+              name: "Physiology",
+              value: 52,
+              disabled: true,
+              pie: 
+                [
+                  {
+                    category: "Sup",
+                    value: 33,
+                    color: am4core.color("#00ffbf"),
+                  },
+                  {
+                    category: "Que",
+                    value: 7,
+                    color: am4core.color("#ff4d4d")
+                  },
+                  {
+                    category: "Und",
+                    value: 12,
+                    color: am4core.color("#A9A9A9")
+                  }
+                ]
+            }, //end second child
+            {
+              name: "Life history",
+              value: 67,
+              disabled: true,
+              pie:
+              [
+                {
+                  category: "Sup",
+                  value: 36,
+                  color: am4core.color("#00ffbf"),
+                },
+                {
+                  category: "Que",
+                  value: 11,
+                  color: am4core.color("#ff4d4d")
+                },
+                {
+                  category: "Und",
+                  value: 20,
+                  color: am4core.color("#A9A9A9")
+                }
+              ]
+            }, // end third child
+            {
+              name: "Behaviour",
+              value: 3,
+              disabled: true,
+              pie:
+              [
+                {
+                  category: "Sup",
+                  value: 2,
+                  color: am4core.color("#00ffbf"),
+                },
+                {
+                  category: "Que",
+                  value: 1,
+                  color: am4core.color("#ff4d4d")
+                },
+                {
+                  category: "Und",
+                  value: 0,
+                  color: am4core.color("#A9A9A9")
+                } 
+              ]
+            } // end fourth child
+         ] //end children list
+
+
+
+      }, // end third main node
+          {name: "Increased susceptibility",
+          value: 0,
+          color: am4core.color("#FFA07A")
+          //fixed: true
+          },
+          {name: "Ideal weed",
+          link: ["Phenotypic plasticity","Polyploidy hypothesis","Habitat filtering"],
+          value: 0,
+          color: am4core.color("#FFA07A")
+          //fixed: true
+          },
+          {name: "Habitat filtering",
+          value: 0,
+          color: am4core.color("#FFA07A"),
+          //fixed: true,
+          link: ["Novel weapons","Adaption"],
+
+          },
+          {name: "Polyploidy hypothesis",
+          value: 0,
+          //fixed: true,
+          link: ["Adaption","Phenotypic plasticity"],
+          color: am4core.color("#FFA07A")
+          },
+          {name: "Adaption",
+          value: 0,
+          link: ["Darwin's Normalization","Limiting Similarity","Ecologoical naviety"],
+          color: am4core.color("#FFA07A")
+          },
+          /*{name: "Novel weapons",
+          value: 0,
+          //fixed: true
+          link: ["Limiting Similarity","Ecologoical naviety","Habitat filtering"],
+          color: am4core.color("#FFA07A")
+          },*/
+
+
+
+
+
+        // Cluster PROPAGULE
+
+          {name: "Propagule pressure",
+            value:109,
+            //fixed: true,
+            pie: 
+            [{
+                category: "Sup",
+                value: 90,
+                color: am4core.color("#00ffbf"),
+             }, 
+              {
+                category: "Que",
+                value: 18,
+                color: am4core.color("#ff4d4d"),
+              }, 
+              {
+                category: "Und",
+                value: 11,
+                color: am4core.color("#A9A9A9")
+              }
+            ],
+            children: 
+            [ {
+                name: "Total number released",
+                value: 19,
+                disabled: true,
+                pie: 
+                [
+                  {
+                    category: "Sup",
+                    value: 15,
+                    color: am4core.color("#00ffbf"),
+                  },
+                  {
+                    category: "Que",
+                    value: 1,
+                    color: am4core.color("#ff4d4d")
+                  },
+                  {
+                    category: "Und",
+                    value: 3,
+                    color: am4core.color("#A9A9A9")
+                  }
+                ]
+              }, 
+              {
+                name: "Propagule size",
+                value: 49,
+                disabled: true,
+                pie: 
+                  [
+                    {
+                      category: "Sup",
+                      value: 38,
+                      color: am4core.color("#00ffbf"),
+                    },
+                    {
+                      category: "Que",
+                      value: 11,
+                      color: am4core.color("#ff4d4d")
+                    },
+                  ]
+              }, //end second child
+              {
+                name: "Propagule frequency",
+                value: 17,
+                disabled: true,
+                pie:
+                [
+                  {
+                    category: "Sup",
+                    value: 10,
+                    color: am4core.color("#00ffbf"),
+                  },
+                  {
+                    category: "Que",
+                    value: 5,
+                    color: am4core.color("#ff4d4d")
+                  },
+                  {
+                    category: "Und",
+                    value: 2,
+                    color: am4core.color("#A9A9A9")
+                  }
+                ]
+              }, // end third child
+              {
+                name: "Distance from source",
+                value: 16,
+                disabled: true,
+                pie:
+                [
+                  {
+                    category: "Sup",
+                    value: 13,
+                    color: am4core.color("#00ffbf"),
+                  },
+                  {
+                    category: "Und",
+                    value: 3,
+                    color: am4core.color("#A9A9A9")
+                  } 
+                ]
+              }, // end fourth child
+
+              {
+                name: "Various proxies",
+                value: 17,
+                disabled: true,
+                pie:
+                [
+                  {
+                    category: "Sup",
+                    value: 13,
+                    color: am4core.color("#00ffbf"),
+                  },
+                  {
+                    category: "Que",
+                    value: 1,
+                    color: am4core.color("#ff4d4d")
+                  },
+                  {
+                    category: "Und",
+                    value: 3,
+                    color: am4core.color("#A9A9A9")
+                  } 
+                ]
+              } // end fifth child
+
+          ] //end children list
+      }, // end pressure node
+          {name: "Colonization pressure",
+          value: 0,
+          link: ["Sampling","Propagule pressure","Golbal competition"],
+          color: am4core.color("#d8bfd8")
+          },
+          {name: "Golbal competition",
+          value: 0,
+          link: ["Sampling","Propagule pressure"],
+          color: am4core.color("#d8bfd8")
+          },
+          {name: "Sampling",
+          value: 0,
+          link: ["Propagule pressure"],
+          color: am4core.color("#d8bfd8")
+          },
+          {name: "Human commensalism",
+          value: 0,
+          link: ["Propagule pressure","Ideal weed"],
+          color: am4core.color("#d8bfd8")
+          },
+          {name: "Tens rule",
+            value:102,
+            link: ["Colonization pressure","Golbal competition"],
+            //fixed: true,
+            pie: 
+            [{
+                category: "Sup",
+                value: 27,
+                color: am4core.color("#00ffbf"),
+             }, 
+              {
+                category: "Que",
+                value: 65,
+                color: am4core.color("#ff4d4d"),
+              }, 
+              {
+                category: "Und",
+                value: 10,
+                color: am4core.color("#A9A9A9")
+              }
+            ],
+            children: 
+            [ {
+                name: "Invasion tens rule",
+                value: 66,
+                disabled: true,
+                pie: 
+                [
+                  {
+                    category: "Sup",
+                    value: 16,
+                    color: am4core.color("#00ffbf"),
+                  },
+                  {
+                    category: "Que",
+                    value: 48,
+                    color: am4core.color("#ff4d4d")
+                  },
+                  {
+                    category: "Und",
+                    value: 2,
+                    color: am4core.color("#A9A9A9")
+                  }
+                ]
+              }, 
+              {
+                name: "Impact tens rule",
+                value: 36,
+                disabled: true,
+                pie: 
+                  [
+                    {
+                      category: "Sup",
+                      value: 11,
+                      color: am4core.color("#00ffbf"),
+                    },
+                    {
+                      category: "Que",
+                      value: 17,
+                      color: am4core.color("#ff4d4d")
+                    },
+                    {
+                    category: "Und",
+                    value: 8,
+                    color: am4core.color("#A9A9A9")
+                  }
+                  ]
+              }, //end second child
+          ] //end children list
+      }, // end tens rule node
+ 
+
+
+         // Cluster Biotic interaction 
+         {name: "Shifting defence",
+            value:68,
+            //fixed: true,
+            link: ["Resource-enemy release","Enemy release",
+            "Enemy reduction","Enemy inversion"],
+            pie: 
+            [{
+                category: "Sup",
+                value: 38,
+                color: am4core.color("#00ffbf"),
+             }, 
+              {
+                category: "Que",
+                value: 30,
+                color: am4core.color("#ff4d4d"),
+              }, 
+            ],
+         },
+         {name: "Evolution of increased competitive ability",
+            value:68,
+            //fixed: true,
+            link: ["Shifting defence","Resource-enemy release","Enemy release",
+            "Enemy reduction","Enemy inversion"],
+            pie: 
+            [{
+                category: "Sup",
+                value: 28,
+                color: am4core.color("#00ffbf"),
+             }, 
+              {
+                category: "Que",
+                value: 40,
+                color: am4core.color("#ff4d4d"),
+              }, 
+            ],
+         }, 
+         {name: "Resource-enemy release",
+            value:0,
+            //fixed: true,
+            link: ["Enemy release",
+            "Enemy reduction","Increased resourse availablity"],
+         },
+         {name: "Increased resourse availablity",
+            value:0,
+            //fixed: true,
+            //link: ["Resource-enemy release"]
+         },
+         {name: "Enemy release",
+            value:163,
+            //fixed: true,
+            link: ["Shifting defence",
+            "Enemy reduction","Enemy inversion","Specialist-generalist"],
+            pie: 
+            [{
+                category: "Sup",
+                value: 66,
+                color: am4core.color("#00ffbf"),
+             }, 
+              {
+                category: "Que",
+                value: 43,
+                color: am4core.color("#ff4d4d"),
+              },
+              {
+                category: "Und",
+                value: 54,
+                color: am4core.color("#A9A9A9")
+              }
+            ],
+            children: 
+            [ {
+                name: "Invaders are released from enemires",
+                value: 140,
+                disabled: true,
+                pie: 
+                [
+                  {
+                    category: "Sup",
+                    value: 67,
+                    color: am4core.color("#00ffbf"),
+                  },
+                  {
+                    category: "Que",
+                    value: 35,
+                    color: am4core.color("#ff4d4d")
+                  },
+                  {
+                    category: "Und",
+                    value: 38,
+                    color: am4core.color("#A9A9A9")
+                  }
+                ]
+              }, 
+              {
+                name: "Invaders show enhanced performance if released from enemies",
+                value: 50,
+                disabled: true,
+                pie: 
+                  [
+                    {
+                      category: "Sup",
+                      value: 12,
+                      color: am4core.color("#00ffbf"),
+                    },
+                    {
+                      category: "Que",
+                      value: 27,
+                      color: am4core.color("#ff4d4d")
+                    },
+                    {
+                    category: "Und",
+                    value: 11,
+                    color: am4core.color("#A9A9A9")
+                  }
+                  ]
+              }, //end second child
+              ]
+         },
+         {name: "Specialist-generalist",
+            value:0,
+            //fixed: true,
+            link: ["New associations","Missed mutalisms"],
+         },
+         {name: "Enemy of my enemy",
+            value:0,
+            //fixed: true,
+            link: ["Biotic indirect effects","New associations"],
+         },
+         {name: "Biotic indirect effects",
+            value:0,
+            //fixed: true,
+            link: ["New associations","Biotic resistance"],
+         },
+         {name: "New associations",
+            value:0,
+            //fixed: true,
+            link: ["Missed mutalisms",
+            "Reckless invader"],
+         },    
+         {name: "Reckless invader",
+            value:0,
+            //fixed: true,
+         },
+          /*{name: "Enemy inversion",
+            value:0,
+            //fixed: true,
+            link: ["Shifting defence","Evolution of increased competitive ability",
+            "Enemy release","Enemy reduction","Enemy of my enemy"],
+         },
+            {name: "Enemy reduction",
+            value:0,
+            //fixed: true,
+            link: [
+            "Enemy inversion","Enemy of my enemy","Specialist-generalist"],
+         },
+            {name: "Missed mutalisms",
+            value:0,
+            //fixed: true,
+            //link: ["New associations"],
+         },  */
+
+
+
+
+         
+         // Cluster Ressource availabiltity
+
+         {name: "Disturbance",
+            value:126,
+            //fixed: true,
+            link: ["Human commensalism","Empty niche","Increased resourse availablity"],
+            pie: 
+            [{
+                category: "Sup",
+                value: 74,
+                color: am4core.color("#00ffbf"),
+             }, 
+              {
+                category: "Que",
+                value: 26,
+                color: am4core.color("#ff4d4d"),
+              }, 
+              {
+                category: "Und",
+                value: 26,
+                color: am4core.color("#A9A9A9")
+              }
+            ],
+            children: 
+            [ {
+                name: "Direct antropogenic disturbance",
+                value: 96,
+                disabled: true,
+                pie: 
+                [
+                  {
+                    category: "Sup",
+                    value: 56,
+                    color: am4core.color("#00ffbf"),
+                  },
+                  {
+                    category: "Que",
+                    value: 16,
+                    color: am4core.color("#ff4d4d")
+                  },
+                  {
+                    category: "Und",
+                    value: 24,
+                    color: am4core.color("#A9A9A9")
+                  }
+                ]
+              }, 
+              {
+                name: "Indirect antropogenic",
+                value: 32,
+                disabled: true,
+                pie: 
+                  [
+                    {
+                      category: "Sup",
+                      value: 19,
+                      color: am4core.color("#00ffbf"),
+                    },
+                    {
+                      category: "Que",
+                      value: 10,
+                      color: am4core.color("#ff4d4d")
+                    },
+                    {
+                    category: "Und",
+                    value: 3,
+                    color: am4core.color("#A9A9A9")
+                  }
+                  ]
+              }, //end second child
+          ] //end children list
+      },
+         {name: "Dynamic equilibrium model",
+            value:0,
+            //fixed: true,
+            link: ["Increased resourse availablity","Empty niche","Reckless invader","Environmental heterogentiy"],
+         },
+         /*{name: "Environmental heterogentiy",
+            value:0,
+            //fixed: true,
+            link: ["Empty niche","Disturbance","Dynamic equilibrium model"],
+         },*/
+
+
+      
+        ]; //end chart data
+
+
+
+        //// Set up data fields
+        networkSeries.dataFields.value = "value";
+        networkSeries.dataFields.name = "name";
+        networkSeries.dataFields.children = "children";
+        networkSeries.dataFields.id = "name";
+        networkSeries.dataFields.linkWith = "link";
+        networkSeries.dataFields.color = "color";
+
+
+        // 1. Make the nodes appear as pie charts (Otherwise they would appear as circles)
+        var pieChart = networkSeries.nodes.template.createChild(am4charts.PieChart);
+        pieChart.isMeasured = false;
+        pieChart.propertyFields.data = "pie";
+        pieChart.horizontalCenter = "middle";
+        pieChart.verticalCenter = "middle";
+        pieChart.chartContainer.minWidth = undefined;
+        pieChart.chartContainer.minHeight = undefined;
+        // 2. Modyfing pie series
+        var pieSeries = pieChart.series.push(new am4charts.PieSeries());
+        pieSeries.dataFields.category = "category";
+        pieSeries.dataFields.value = "value";
+        pieSeries.slices.template.propertyFields.fill = "color";
+
+
+
+        // ADAPTING THE Pie CHARTs TO THE WINDOW OF THE BROWSER (Otherwise they eill apear too big)
+        pieChart.adapter.add("radius", function(radius, target) {
+        var radius = target.parent.outerCircle.pixelRadius;
+        target.width = radius * 2;
+        target.height = radius * 2;
+        target.chartContainer.minWidth = undefined;
+        target.chartContainer.minHeight = undefined;
+        return radius;
+        });
+        chart.events.on("maxsizechanged", function(){
+          pieChart.clones.each(function(clone){
+            clone.radius = clone.radius;
+          })
+        })
+
+        // make main nodes fixed
+        //  if I make the main nodes fixed, I will not be able to start collapsed (networkSeries.maxLevels = 1) because the nodes would be too close to each other
+        //networkSeries.dataFields.fixed = "fixed";
+        //networkSeries.nodes.template.propertyFields.x = "x";
+        //networkSeries.nodes.template.propertyFields.y = "y";
+
+        // Start collapsed
+        networkSeries.maxLevels = 2;
+        networkSeries.nodes.template.propertyFields.hidden = "disabled";
+
+        // Expand single level only with each click 
+        networkSeries.nodes.template.expandAll = false;
+
+        networkSeries.nodes.template.tooltipText = "{name}:{value}";
+        networkSeries.tooltip.fontSize = 30;
+
+        networkSeries.nodes.template.fillOpacity = 1;
+        networkSeries.nodes.template.outerCircle.disabled = true;
+
+        // links
+        // how closely the childen are to their parents
+        networkSeries.manyBodyStrength = -16;
+        networkSeries.links.template.strength = 1.5;
+        networkSeries.links.template.distance = 1.5;
+
+        networkSeries.minRadius = am4core.percent(2);
+
+        networkSeries.linkWithStrength = 0.2;
+
+
+        // make the labels of the pie slices go around with the pie chart
+        pieSeries.alignLabels = false;
+        pieSeries.labels.template.bent = true;
+        pieSeries.labels.template.radius = 3;
+        pieSeries.labels.template.padding(0,0,0,0);
+        pieSeries.ticks.template.disabled = true;
+        pieSeries.labels.template.text = "{category}: {value.value}";
+
+
+
+        // Add labels to the nodes
+        networkSeries.nodes.template.label.text = "{name}"
+        networkSeries.nodes.template.label.valign = "bottom";
+        networkSeries.nodes.template.label.fill = am4core.color("#000");
+        // The distance between the node and its label
+        networkSeries.nodes.template.label.dy = 20;
+        networkSeries.nodes.template.tooltipText = "{name}: [bold]{value}[/]";
+        // Font size of the labels under the nodes
+        networkSeries.fontSize = 18;
+
+        // Width and Opacity of the links
+        networkSeries.links.template.strokeWidth = 3;
+        networkSeries.links.template.strokeOpacity = 1;
+
+
+        var hoverState = networkSeries.links.template.states.create("hover");
+        hoverState.properties.strokeWidth = 3;
+        hoverState.properties.strokeOpacity = 1;
+
+
+        // 1. Close other nodes when one is opened
+        networkSeries.nodes.template.events.on("hit", function(ev) {
+        var targetNode = ev.target;
+          if (targetNode.isActive) {
+            networkSeries.nodes.each(function(node) {
+              if (targetNode !== node && node.isActive && targetNode.dataItem.level == node.dataItem.level) {
+                node.isActive = false;
+              }
+            });
+          }
+        });
+
+
+        // 2. zomm in the zone of the selected node
+        //networkSeries.nodes.template.togglable = false;
+        chart.zoomable = true;
+        networkSeries.nodes.template.events.on("hit", function(event) {
+          if (event.target.isActive) {
+            chart.zoomToDataItem(event.target.dataItem, 1, true)
+          }
+          else {
+            chart.zoomOut();
+          }
+        });
+
+
+        //3. 
+        networkSeries.nodes.template.events.on("over", function(event) {
+        event.target.dataItem.childLinks.each(function(link) {
+            link.isHover = true;
+        })
+        if (event.target.dataItem.parentLink) {
+            event.target.dataItem.parentLink.isHover = true;
+        }
+
+        })
+        //4.
+        networkSeries.nodes.template.events.on("out", function(event) {
+        event.target.dataItem.childLinks.each(function(link) {
+            link.isHover = false;
+        })
+        if (event.target.dataItem.parentLink) {
+            event.target.dataItem.parentLink.isHover = false;
+        }
+        })
+        
+        }); // end am4core.ready()
+       
+
+    </script>
+  </body>
+</html>

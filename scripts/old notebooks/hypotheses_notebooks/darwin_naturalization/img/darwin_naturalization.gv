@@ -1,0 +1,11 @@
+digraph G {
+	A -> B
+	A -> C
+	A -> D
+	A -> E
+	A [label="" image="main_hyp.PNG" shape=none]
+	B [label="" image="hyp1.PNG" shape=none]
+	C [label="" image="hyp2.PNG" shape=none]
+	D [label="" image="hyp3.PNG" shape=none]
+	E [label="" image="hyp4.PNG" shape=none]
+}
