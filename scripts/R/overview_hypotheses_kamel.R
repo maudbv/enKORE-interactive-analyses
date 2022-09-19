@@ -92,14 +92,15 @@ server <- function(input, output, session) {
     
     ggplotly(ggplot(selectedData_continents(),aes(x=Continent,y=count,fill=Continent))+
                geom_bar(stat='identity')+
-               theme(axis.text.x=element_text(angle =20,face = "bold",size = 12),
-                     axis.text.y=element_text(face = "bold",size = 12),
-                     axis.ticks.y=element_blank(),
-                     plot.title = element_text(color="#800080", size=16, face="bold.italic"),
-                     axis.title.x = element_text(color="black", size=14, face="bold"),
-                     axis.title.y = element_text(color="black", size=14, face="bold"),
-                     legend.position = "none"
-                     )+
+               # theme(axis.text.x=element_text(angle =20,face = "bold",size = 12),
+               #       axis.text.y=element_text(face = "bold",size = 12),
+               #       axis.ticks.y=element_blank(),
+               #       plot.title = element_text(color="#800080", size=16, face="bold.italic"),
+               #       axis.title.x = element_text(color="black", size=14, face="bold"),
+               #       axis.title.y = element_text(color="black", size=14, face="bold"),
+               #       legend.position = "none"
+               #       )+
+               theme_hiK() +
                labs(title="Distribution of articles over continents.",x="Continent",y="Number of articles")    )
     
   })
