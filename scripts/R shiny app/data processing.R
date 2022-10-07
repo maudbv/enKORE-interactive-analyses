@@ -1,13 +1,24 @@
 # Import and pre-process data for the hi-knowledge shiny app
 # 2022 Maud Bernard-Verdier
 library(stringr)
+library(purrr)
+
+# all_files <- list.files('resources/csv', pattern = 'comparison*', full.names = TRUE)
+# df_list <- map(all_files, 
+#                  ~.x %>% readr::read_csv(show_col_types = FALSE))
+# 
+# # Correct one wrong column name
+# df_list <-  lapply(df_list,function(x) {
+#   names(x)[which(names(x) == "number of plant species")] = "Number of species"
+#   return(x)
+#   })
 
 # Import comparison tables exported from ORKG via python package ####
 darwin <- read.csv(file = "resources/csv/comparison_R53407_Darwin's naturalisation.csv")
 enemy <- read.csv(file = "resources/csv/comparison_R58002_Enemy release.csv")
 
 # Merge all tables in one ####
-df_list <- list(darwin,enemy)
+df_list = list(darwin,enemy)
 total_df <- Reduce(
   function(x, y, ...) merge(x, y, all = TRUE, ...),
   df_list
@@ -42,9 +53,10 @@ total_df$continents <- str_split(tolower(total_df$Continent), pattern = ",")
 
 # Homogenize taxa information ####
 total_df$Investigated_species <- str_replace_all(
-  str_replace_all(total_df$Investigated_species," and ", ","),
-  "-", ",")
-
+  str_replace_all(
+    str_replace_all(total_df$Investigated_species," and ", ","),
+  "-", ","),
+  ";", ",")
 ## Create a column that is a list of taxon :
 total_df$taxa <- str_split(tolower(total_df$Investigated_species) , pattern = ",")
 

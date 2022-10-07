@@ -33,8 +33,8 @@ ui <- fluidPage(
       uiOutput("method_selector")
     ),
     
-    #### TODO :
-    # get all the hypotheses
+    #### TODO
+    # FIX the taxa name typos
     # transform to dashboard
     # switch to plotly interactive
     # add donut plot for summary stats

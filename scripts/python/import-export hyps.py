@@ -31,4 +31,5 @@ def p2csv_comparisons(comp_ids):
         df.to_csv("data/csv/comparison_" + comp_ids[i]+ "_" + hyp + ".csv",
         index = False, header= True)
 
-p2csv_comparisons(['R53407','R58002'])
+comp_refs = ['R53407','R58002','R57501','R57101','R56110','R56945','R55219','R54867','R54244','R52143']
+p2csv_comparisons(comp_refs)
