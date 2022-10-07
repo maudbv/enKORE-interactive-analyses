@@ -4,14 +4,7 @@ library(stringr)
 
 # Import comparison tables exported from ORKG via python package ####
 darwin <- read.csv(file = "resources/csv/comparison_R53407_Darwin's naturalisation.csv")
-darwin$Title <- darwin$publication
-names(darwin) <- stringr::str_replace_all(names(darwin), "\\.","_")
-darwin <- darwin[!duplicated(darwin$Title),]
-
 enemy <- read.csv(file = "resources/csv/comparison_R58002_Enemy release.csv")
-enemy$Title <- enemy$publication
-names(enemy) <- stringr::str_replace_all(names(enemy), "\\.","_")
-enemy <- enemy[!duplicated(enemy$Title),]
 
 # Merge all tables in one ####
 df_list <- list(darwin,enemy)
@@ -19,6 +12,10 @@ total_df <- Reduce(
   function(x, y, ...) merge(x, y, all = TRUE, ...),
   df_list
 )
+
+# reformat column names
+total_df$Title <- total_df$publication
+names(total_df) <- stringr::str_replace_all(names(total_df), "\\.","_")
 
 # Chronological accumulation of studies: ####
 total_df <-   group_by(.data = total_df, hypothesis) %>%
@@ -61,5 +58,7 @@ total_df$Research_Method[grep("experim", total_df$Research_Method, ignore.case =
 
 # create clean vectors of filtering factor ####
 taxa_groups <-  sort(unique(tolower(unlist(total_df$taxa))))
+taxa_groups <- taxa_groups[which((taxa_groups != "") & !is.na(taxa_groups))]
+
 habitat_groups <- sort(unique(tolower(unlist(total_df$Habitat))))
 method_groups <- sort(unique(tolower(unlist(total_df$Research_Method))))

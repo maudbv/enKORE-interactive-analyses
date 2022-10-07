@@ -3,6 +3,7 @@ library(ggplot2)
 library(dplyr)
 library(plotly)
 library(sysfonts)
+library(dplyr)
 
 # set app working directory
 # setwd("/Users/maud/Documents/Work/Research work/enKORE/enKore project/Interactive analyses/ORKG interactive analyses/scripts/R shiny app")
@@ -27,16 +28,17 @@ ui <- fluidPage(
       selectInput('hyp', 'Select a hypothesis',
                   c(unique(total_df$hypothesis))),
       checkboxGroupInput('taxa', 'Select a taxonomic group',
-                    c("All",taxa_groups), selected = "All"),
-      checkboxGroupInput('hab', 'Select a habitat',
-                  c("All",habitat_groups), selected = "All"),
-      selectInput('method', 'Select a research method',
-                  c("All",method_groups), selected = "All")
+                     choices = c("All",taxa_groups), selected = "All"),
+      uiOutput("habitat_selector"),
+      uiOutput("method_selector")
     ),
     
-    #### TODO : need to clean data to remove stupid duplicates and rename categories.
-    # Also need to refine filtering so it is a grep (looking for a pattern in a list) rather than a string match
-    # add "stickers" on the panels with filter options written.
+    #### TODO :
+    # get all the hypotheses
+    # transform to dashboard
+    # switch to plotly interactive
+    # add donut plot for summary stats
+    # add radar plot for subhyps
     
   mainPanel(
     tabsetPanel(
@@ -52,16 +54,39 @@ ui <- fluidPage(
 
 server <- function(input, output, session) {
   
-  # Select data
+ # Conditional filter selection
+    hyp_taxa <- reactive({
+      req(input$taxa)
+      filter(total_df, hypothesis == input$hyp) %>% 
+        { if (! "All" %in% input$taxa) {
+          dplyr::filter(., .detect_items(taxa, input$taxa))} else {.} 
+        }
+    })
+    
+    output$habitat_selector <- renderUI({
+      selectInput(inputId = "hab",
+                  label = "Select a habitat",
+                  choices =  c("All", unique(unlist(hyp_taxa()$Habitat))))
+    })
+    
+    hyp_taxa_hab <- reactive({
+      req(hyp_taxa())
+      hyp_taxa() %>% 
+        { if (! "All" %in% input$hab) {
+          dplyr::filter(., .detect_items(Habitat, input$hab))} else {.}
+          }
+    })
+    
+    output$method_selector <- renderUI({
+      req(hyp_taxa_hab())
+      selectInput(inputId = "method",
+                  label = "Select a research method",
+                  choices =  c("All", unique(unlist( hyp_taxa_hab()$Research_Method))))
+    })
+
   filtered_df <- reactive({
-    total_df %>%
-      filt = dplyr::filter(hypothesis == input$hyp) %>%
-      { if (! "All" %in% input$taxa) {
-        dplyr::filter(., .detect_items(taxa, input$taxa))} else {.} 
-      } %>%
-      { if (! "All" %in% input$hab) {
-        dplyr::filter(., .detect_items(Habitat, input$hab))} else {.}
-      } %>%
+    req(input$method)
+   hyp_taxa_hab() %>% 
       { if (! "All" %in% input$method) {
         dplyr::filter(., .detect_items(Research_Method, input$method))} else {.}
       }
@@ -75,8 +100,8 @@ server <- function(input, output, session) {
   
  
   output$chronology <- renderPlot( {
-    df <-  filtered_df()
-    plot_chrono(df, input$hyp)
+    req(filtered_df())
+    plot_chrono(filtered_df())
   })
   
 }
