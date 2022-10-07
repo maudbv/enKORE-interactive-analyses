@@ -17,7 +17,7 @@ hi_colors <- data.frame(
 
 # Configure Theme
 theme_hiK <- function (base_size = 11,
-          base_family = "mono",
+          base_family = "sans",
           base_line_size = base_size/22, 
           base_rect_size = base_size/22) 
 {
@@ -69,7 +69,8 @@ theme_hiK <- function (base_size = 11,
              panel.grid = element_line(colour = "white"), 
              panel.grid.minor = element_line(size = rel(0.5)),
              panel.spacing = unit(half_line,"pt"),
-             panel.spacing.x = NULL, panel.spacing.y = NULL, 
+             panel.spacing.x = NULL,
+             panel.spacing.y = NULL, 
              panel.ontop = FALSE,
              
              strip.background = element_rect(fill = NA,colour = NA),
@@ -88,7 +89,7 @@ theme_hiK <- function (base_size = 11,
              plot.background = element_rect(colour = "white"),
             
              plot.title = element_text(face = "bold", size = rel(1.2), hjust = 0,
-                                       vjust = 1, margin = margin(b = half_line)),
+                                       vjust = 0, margin = margin(b = half_line)),
              plot.title.position = "panel", 
              
              plot.subtitle = element_text(hjust = 0, vjust = 1, margin = margin(b = half_line)), 
