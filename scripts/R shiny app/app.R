@@ -10,6 +10,8 @@ library(dplyr)
 library(plotly)
 library(sysfonts)
 library(dplyr)
+require(shinyWidgets)
+require(shinyjs)
 
 # import and pre-process data
 source('data processing.R')
@@ -24,23 +26,37 @@ source("resources/functions/app_helper.R")
 source("resources/functions/plot_chrono.R")
 
 #Set up User Interface
-ui <- fluidPage(
+ui <- bootstrapPage(
   
   titlePanel('Exploring hypotheses in Invasion Biology'),
   
   sidebarLayout(
     sidebarPanel(
+      
+      "Select the hypothesis you wish to explore.
+      You will then be able to filter by taxa, habitats and research method",
+      
       selectInput('hyp', 'Select a hypothesis',
                   c(unique(total_df$hypothesis))),
-      checkboxGroupInput('taxa', 'Select a taxonomic group',
-                     choices = c("All",taxa_groups), selected = "All"),
+    
+      pickerInput(inputId = 'taxa',
+                  'Select a taxonomic group',
+                  choices = taxa_groups,
+                  multiple = TRUE,
+                  selected = taxa_groups,
+                  options = list(`actions-box` = TRUE,
+                     `none-selected-text` = "Please make a selection!")
+      ),
+      
       uiOutput("habitat_selector"),
+      
       uiOutput("method_selector")
     ),
     
     #### TODO
     # FIX the taxa name typos
-    # transform to dashboard
+    # make taxa_group reactive depending on the hypothesis
+    # improve formatting as a dashboard/fluidpage ?
     # switch to plotly interactive
     # add donut plot for summary stats
     # add radar plot for subhyps
