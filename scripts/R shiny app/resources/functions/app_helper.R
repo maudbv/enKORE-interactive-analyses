@@ -17,4 +17,3 @@
   return(y)
 }
 
-.filter_dataframe <- function(df, 

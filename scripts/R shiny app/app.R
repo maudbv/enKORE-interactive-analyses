@@ -1,3 +1,9 @@
+# Shiny app dashboard to explore hypotheses in invasion science
+# author: Maud Bernard-Verdier
+# source: orkg.org
+
+
+# Load packages
 library(shiny)
 library(ggplot2)
 library(dplyr)
@@ -5,18 +11,17 @@ library(plotly)
 library(sysfonts)
 library(dplyr)
 
-# set app working directory
-# setwd("/Users/maud/Documents/Work/Research work/enKORE/enKore project/Interactive analyses/ORKG interactive analyses/scripts/R shiny app")
-
-# import and process data
+# import and pre-process data
 source('data processing.R')
 
-# Get style themes #
+# Get colours and style themes #
 source("resources/ggplot_HiK_theme.R")
 
 # Load custom functions #
+source("resources/functions/app_helper.R")
+
+# Load plotting functions
 source("resources/functions/plot_chrono.R")
-source("resources/functions/detect_items.R")
 
 #Set up User Interface
 ui <- fluidPage(
