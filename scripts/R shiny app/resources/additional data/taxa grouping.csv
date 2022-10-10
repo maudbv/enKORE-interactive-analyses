@@ -1,0 +1,28 @@
+taxa_label,taxa_groups,taxa_groups_large
+plants,plants,plants
+fishes,fish,vertebrates
+birds,birds,vertebrates
+insects,invertebrates,invertebrates
+mammals,mammals,vertebrates
+crustaceans,invertebrates,invertebrates
+NA,any,any
+fungi,fungi,fungi
+molluscs,invertebrates,invertebrates
+eubacteria,eubacteria,eubacteria
+archaea,archaea,archaea
+viruses,viruses,viruses
+algae,algae,algae
+other invertebrates,invertebrates,invertebrates
+reptiles,reptiles,vertebrates
+amphibians,amphibians,vertebrates
+bryozoan,invertebrates,invertebrates
+any vertebrates,invertebrates,invertebrates
+any invertebrates,invertebrates,invertebrates
+earthworms,invertebrates,invertebrates
+echinoderm,invertebrates,invertebrates
+ascidian,invertebrates,invertebrates
+tunicate,invertebrates,invertebrates
+polychaetes,invertebrates,invertebrates
+tubeworm,invertebrates,invertebrates
+anemone,invertebrates,invertebrates
+earthworm,invertebrates,invertebrates

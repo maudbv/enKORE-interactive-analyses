@@ -3,7 +3,7 @@
 # source: orkg.org
 
 
-# Load packages
+# Load packages ####
 library(shiny)
 library(ggplot2)
 library(dplyr)
@@ -14,26 +14,27 @@ require(shinyWidgets)
 require(shinyjs)
 require(shinythemes)
 
-# import and pre-process data
+# import and pre-process data ####
 source('data processing.R')
 
-# Get colours and style themes #
+# Get colours and style themes ####
 source("resources/ggplot_HiK_theme.R")
 
-# Load custom functions #
+# Load custom functions ####
 source("resources/functions/app_helper.R")
 
-# Load plotting functions
+# Load plotting functions ####
 source("resources/functions/plot_chrono.R")
 
-#Set up User Interface
+#Set up User Interface ####
 ui <- bootstrapPage(
   navbarPage(theme = shinytheme("flatly"),
              collapsible = TRUE,
              HTML('<a style="text-decoration:none;cursor:default;color:#FFFFFF;" class="active" href="#">Hypotheses in Invasion Biology</a>'),
              id="nav",
-             windowTitle = "Exploring hypotheses in Invasion Biology",
+             windowTitle = "Exploring hypotheses in Invasion Science",
              
+             # First page: Interactive exploration of evidence supporting individual hyps
              tabPanel("Evidence for each hypothesis",
                       sidebarLayout(
                         sidebarPanel(
@@ -41,7 +42,8 @@ ui <- bootstrapPage(
                           "Explore the evidence available for major hypotheses in Invasion Science.
                           You can filter studies by taxa,
                           habitats or research method",
-                          
+                          tags$br(),
+                          tags$br(),
                           selectInput('hyp', 'Select a hypothesis',
                                       c(unique(total_df$hypothesis))),
                           
@@ -58,29 +60,38 @@ ui <- bootstrapPage(
                           
                           uiOutput("method_selector"),
                           
-  
-                          HTML('<a style="text-decoration:none;cursor:default;color:#27596B;" class="active" href="#">This is a, project of the Hi Knowledge initiative</a>'),
+                          
+                          HTML('<a style="text-decoration:none;cursor:default;color:#27596B;" class="active" href="#">This is a project of the Hi Knowledge initiative</a>'),
                           tags$br(),
-                          tags$a(href="hi-knowledge.org", "hi-knowledge.org")
+                          tags$a(href="https://hi-knowledge.org/", "hi-knowledge.org")
                         )
-                      ,
-                      
-                      #### TODO
-                      # FIX the taxa name typos
-                      # make taxa_group reactive depending on the hypothesis
-                      # improve formatting as a dashboard/fluidpage ?
-                      # switch to plotly interactive
-                      # add donut plot for summary stats
-                      # add radar plot for subhyps
-                      
-                      mainPanel(
-                        tabsetPanel(
-                          # tabPanel("Support for the hypothesis", plotlyOutput('chronology')) 
-                          tabPanel("Support over time",
-                                   plotOutput('chronology')) 
+                        ,
+                        
+                        #### TODO
+                        # FIX the taxa name typos
+                        # make taxa_group reactive depending on the hypothesis
+                        # improve formatting as a dashboard/fluidpage ?
+                        # switch to plotly interactive
+                        # add donut plot for summary stats
+                        # add radar plot for subhyps
+                        
+                        mainPanel(
+                          tabsetPanel(
+                             tabPanel("Support for the hypothesis", plotlyOutput('chronology')) 
+                           # tabPanel("Support over time",
+                           #          plotOutput('chronology')) 
+                          )
                         )
                       )
-                      )
+             ),
+             
+             # Second page: Interactive exploration of evidence supporting individual hyps
+             
+             tabPanel("About the project",
+                      "This is a work in progress from the enKORE project, funded by the Volkswagen Stiftung, Germany.",
+                      tags$br(),
+                      tags$br(),
+                      'The interactive website was built using R shiny, with data from the 2018 book "Invasion biology: hypotheses and evidence", by Jeschke & Heger (eds), and currently curated by the', tags$a(href="https://orkg.org", " Open Knowledge Research Graph project",),'.'
              )
   )
 )
@@ -135,7 +146,7 @@ server <- function(input, output, session) {
   # })
   
  
-  output$chronology <- renderPlot( {
+  output$chronology <- renderPlotly( {
     req(filtered_df())
     plot_chrono(filtered_df())
   })
