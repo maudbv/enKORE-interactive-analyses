@@ -27,8 +27,8 @@ p <- ggplot(df, aes(Study_date, chrono_support,
   scale_size(name="Number of taxa", 
              range = c(1, 30), breaks = c(1, 10,100,1000),limits = c(1,1000)) +
     xlab("Time") + 
-    ylab("Number of studies") +
-  ggtitle(paste( unique(df$hypothesis), 'hypothesis'))
+    ylab("Number of studies") #+
+ # ggtitle(paste( unique(df$hypothesis), 'hypothesis'))
 
 # adding labels
 p <-  p + geom_text(aes(x = latest, y = total_count,

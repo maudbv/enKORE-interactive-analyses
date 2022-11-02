@@ -3,9 +3,10 @@
 # source: orkg.org
 
 #### TODO
-# add donut plot for summary stats
+#improve page layout : smaller donut, with sub plots for sub hyps
+# add text in the tab
+# sort problem of repeated study names for enemy release for instance
 # add radar plot for subhyps
-# add scrollable data table in new tab
 
 # Load packages ####
 library(shiny)
@@ -30,7 +31,7 @@ source("resources/functions/app_helper.R")
 
 # Load plotting functions ####
 source("resources/functions/plot_chrono.R")
-
+source("resources/functions/plot_piechart.R")
 #Set up User Interface ####
 ui <- bootstrapPage(
   navbarPage(theme = shinytheme("flatly"),
@@ -45,8 +46,7 @@ ui <- bootstrapPage(
                         sidebarPanel(
                           
                           "Explore the evidence available for major hypotheses in Invasion Science.
-                          You can filter studies by taxa,
-                          habitats or research method",
+                          You can filter studies by taxa, habitats or research method",
                           tags$br(),
                           tags$br(),
                           selectInput('hyp', 'Select a hypothesis',
@@ -77,9 +77,12 @@ ui <- bootstrapPage(
                           tabsetPanel(
                              # tabPanel("Support for the hypothesis", plotlyOutput('chronology')) 
                            tabPanel("Support for the hypothesis",
-                                    plotOutput('chronology')),
+                                    plotlyOutput('support_piechart', height = "80%"),
+                                    plotOutput('chronology')
+                           ),
                            tabPanel("Data",
-                           DT::dataTableOutput("filtered_data"))
+                           DT::dataTableOutput("filtered_data")
+                           )
                           )
                         )
                       )
@@ -149,6 +152,11 @@ server <- function(input, output, session) {
   output$chronology <- renderPlot( {
     req(filtered_df())
     plot_chrono(filtered_df())
+  })
+  
+  output$support_piechart <- renderPlotly( {
+    req(filtered_df())
+    plot_piechart(filtered_df())
   })
   
   # Data table
