@@ -2,6 +2,10 @@
 # author: Maud Bernard-Verdier
 # source: orkg.org
 
+#### TODO
+# add donut plot for summary stats
+# add radar plot for subhyps
+# add scrollable data table in new tab
 
 # Load packages ####
 library(shiny)
@@ -13,6 +17,7 @@ library(dplyr)
 require(shinyWidgets)
 require(shinyjs)
 require(shinythemes)
+library(DT)
 
 # import and pre-process data ####
 source('data processing.R')
@@ -67,19 +72,14 @@ ui <- bootstrapPage(
                         )
                         ,
                         
-                        #### TODO
-                        # FIX the taxa name typos
-                        # make taxa_group reactive depending on the hypothesis
-                        # improve formatting as a dashboard/fluidpage ?
-                        # switch to plotly interactive
-                        # add donut plot for summary stats
-                        # add radar plot for subhyps
-                        
+                       
                         mainPanel(
                           tabsetPanel(
                              # tabPanel("Support for the hypothesis", plotlyOutput('chronology')) 
                            tabPanel("Support for the hypothesis",
-                                    plotOutput('chronology'))
+                                    plotOutput('chronology')),
+                           tabPanel("Data",
+                           DT::dataTableOutput("filtered_data"))
                           )
                         )
                       )
@@ -149,6 +149,15 @@ server <- function(input, output, session) {
   output$chronology <- renderPlot( {
     req(filtered_df())
     plot_chrono(filtered_df())
+  })
+  
+  # Data table
+  output$filtered_data = DT::renderDataTable({
+    req(filtered_df())
+    display_columns <- c("support_for_hypothesis","Investigated_species","Habitat","Research_Method", "continents") 
+    df <-  as.data.frame(filtered_df())
+    rownames(df) <- df$study
+    df <-  df[, display_columns]
   })
   
 }
