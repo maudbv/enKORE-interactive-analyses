@@ -77,9 +77,9 @@ ui <- bootstrapPage(
                         
                         mainPanel(
                           tabsetPanel(
-                             tabPanel("Support for the hypothesis", plotlyOutput('chronology')) 
-                           # tabPanel("Support over time",
-                           #          plotOutput('chronology')) 
+                             # tabPanel("Support for the hypothesis", plotlyOutput('chronology')) 
+                           tabPanel("Support for the hypothesis",
+                                    plotOutput('chronology'))
                           )
                         )
                       )
@@ -91,7 +91,7 @@ ui <- bootstrapPage(
                       "This is a work in progress from the enKORE project, funded by the Volkswagen Stiftung, Germany.",
                       tags$br(),
                       tags$br(),
-                      'The interactive website was built using R shiny, with data from the 2018 book "Invasion biology: hypotheses and evidence", by Jeschke & Heger (eds), and currently curated by the', tags$a(href="https://orkg.org", " Open Knowledge Research Graph project",),'.'
+                      'This interactive website was built using R shiny, with data from the 2018 book "Invasion biology: hypotheses and evidence", by Jeschke & Heger (eds), and currently curated by the', tags$a(href="https://orkg.org", " Open Research Knowledge Graph project",),'.'
              )
   )
 )
@@ -140,13 +140,13 @@ server <- function(input, output, session) {
   })
 
   # Plot chronology figure
-  # output$chronology <- renderPlotly(expr = {
-  #   df <-  filtered_df()
-  #   ggplotly(plot_chrono(df, input$hyp))
+ 
+  # output$chronology <- renderPlotly( {
+  #   req(filtered_df())
+  #   plot_chrono(filtered_df())
   # })
   
- 
-  output$chronology <- renderPlotly( {
+  output$chronology <- renderPlot( {
     req(filtered_df())
     plot_chrono(filtered_df())
   })

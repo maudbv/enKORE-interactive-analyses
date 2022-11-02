@@ -56,7 +56,11 @@ total_df <-  ungroup(total_df)
 total_df$support_for_hypothesis <- factor(total_df$support_for_hypothesis,
                                     levels = c("Supported","Undecided","Questioned"))
 
-
+# correct typo in hyps ####
+total_df$hypothesis <- str_replace(string = total_df$hypothesis,
+                                   pattern = "Biotic resistence",
+                                   replacement = "Biotic resistance")
+  
 # Homogenize continent information ####
 total_df$Continent <- str_replace_all(
   str_replace(
