@@ -77,10 +77,18 @@ ui <- bootstrapPage(
                           tabsetPanel(
                              # tabPanel("Support for the hypothesis", plotlyOutput('chronology')) 
                            tabPanel("Support for the hypothesis",
-                                    plotlyOutput('support_piechart', height = "80%"),
+                                    tags$br(),
+                                    h3(textOutput("hyp_description")),
+                                    fluidRow(
+                                      column(plotlyOutput('support_piechart', height = "200px"),
+                                             width = 5),
+                                      column( p(textOutput("support_summary"), 
+                                                style="text-align:left;color:#27596B;padding:15px;border-radius:10px"),
+                                              width = 5)
+                                    ),
                                     plotOutput('chronology')
                            ),
-                           tabPanel("Data",
+                           tabPanel("Data",  
                            DT::dataTableOutput("filtered_data")
                            )
                           )
@@ -88,13 +96,12 @@ ui <- bootstrapPage(
                       )
              ),
              
-             # Second page: Interactive exploration of evidence supporting individual hyps
-             
+             # Second page: about the project
              tabPanel("About the project",
                       "This is a work in progress from the enKORE project, funded by the Volkswagen Stiftung, Germany.",
                       tags$br(),
                       tags$br(),
-                      'This interactive website was built using R shiny, with data from the 2018 book "Invasion biology: hypotheses and evidence", by Jeschke & Heger (eds), and currently curated by the', tags$a(href="https://orkg.org", " Open Research Knowledge Graph project",),'.'
+                      'This interactive website was built using R shiny, with data from the 2018 book "Invasion biology: hypotheses and evidence", by Jeschke & Heger (eds), and currently curated by the', tags$a(href="https://orkg.org", " Open Research Knowledge Graph project"),'.'
              )
   )
 )
@@ -142,6 +149,12 @@ server <- function(input, output, session) {
       }
   })
 
+  support_perc <- reactive({
+    req(filtered_df)
+    df <-  filtered_df()
+    counts <- df %>% count(support_for_hypothesis, sort = FALSE)
+    return(round(counts$n[which(counts$support_for_hypothesis == "Supported")]/sum(counts$n)*100,2))
+  })
   # Plot chronology figure
  
   # output$chronology <- renderPlotly( {
@@ -158,6 +171,20 @@ server <- function(input, output, session) {
     req(filtered_df())
     plot_piechart(filtered_df())
   })
+  
+  # comments
+  output$hyp_description <- renderText({
+    paste(input$hyp,"hypothesis")
+  })
+  
+  output$support_summary <- renderText({
+    paste("The hypothesis is supported in ", support_perc(),
+          "% of the ",
+          length(unique(filtered_df()$study)),
+          " studies included in the database."
+          )
+  })
+  
   
   # Data table
   output$filtered_data = DT::renderDataTable({
