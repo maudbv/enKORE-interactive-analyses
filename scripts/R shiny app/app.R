@@ -3,10 +3,9 @@
 # source: orkg.org
 
 #### TODO
-#improve page layout : smaller donut, with sub plots for sub hyps
-# add text in the tab
+#improve page layout : with sub plots for sub hyps
 # sort problem of repeated study names for enemy release for instance
-# add radar plot for subhyps
+# add radar plot for the proportion of each category
 
 # Load packages ####
 library(shiny)
