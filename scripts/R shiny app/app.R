@@ -31,7 +31,9 @@ source("resources/functions/app_helper.R")
 # Load plotting functions ####
 source("resources/functions/plot_chrono.R")
 source("resources/functions/plot_piechart.R")
-#Set up User Interface ####
+source("resources/functions/plot_radialplots.R")
+
+# User Interface ####
 ui <- bootstrapPage(
   navbarPage(theme = shinytheme("flatly"),
              collapsible = TRUE,
@@ -74,7 +76,8 @@ ui <- bootstrapPage(
                        
                         mainPanel(
                           tabsetPanel(
-                             # tabPanel("Support for the hypothesis", plotlyOutput('chronology')) 
+                          
+                            # Panel 1: support for the hypothesis
                            tabPanel("Support for the hypothesis",
                                     tags$br(),
                                     h3(textOutput("hyp_description")),
@@ -85,8 +88,35 @@ ui <- bootstrapPage(
                                                 style="text-align:left;color:#27596B;padding:15px;border-radius:10px"),
                                               width = 5)
                                     ),
-                                    plotOutput('chronology')
+                                    fluidRow(plotOutput('chronology'),
+                                             width = "95%",
+                                             height = "100%"),
+                                    tags$br()
                            ),
+                           
+                           # Panel 2: Filtered data table
+                           tabPanel("Distribution",  
+                                     
+                                    fluidRow( 
+                                      column(plotlyOutput("support_habitats"),
+                                             width = 5,
+                                             height = 5),
+                                      column( plotlyOutput("support_methods"),  
+                                              height = 5,
+                                              width = 5)
+                                    ),
+                                    fluidRow(
+                                      column(plotlyOutput("support_taxa"),
+                                             width = 5,
+                                             height = 5),
+                                      column(plotlyOutput("support_continents"),
+                                             width = 5,
+                                             height = 5)
+                                    ),
+                                    tags$br()
+                           ),
+                           
+                           # Panel 2: Filtered data table
                            tabPanel("Data",  
                            DT::dataTableOutput("filtered_data")
                            )
@@ -106,7 +136,7 @@ ui <- bootstrapPage(
 )
 
 
-# server:   ####
+# Server:   ####
 
 server <- function(input, output, session) {
   
@@ -184,6 +214,25 @@ server <- function(input, output, session) {
           )
   })
   
+  # Distribution
+  output$support_habitats <- renderPlotly( {
+    req(filtered_df())
+    plot_radial(filtered_df(), group_col = "Habitat_list", grouping = habitat_groups)
+  })
+  output$support_methods <- renderPlotly( {
+    req(filtered_df())
+    plot_radial(filtered_df(), group_col = "Research_Method", grouping = method_groups)
+  })
+  
+  output$support_taxa <- renderPlotly( {
+    req(filtered_df())
+    plot_radial(filtered_df(),group_col = "taxa", grouping =  taxa_groups)
+  })
+  
+  output$support_continents <- renderPlotly( {
+    req(filtered_df())
+    plot_radial(filtered_df(), group_col = "continents", grouping = continents_vec)
+  })
   
   # Data table
   output$filtered_data = DT::renderDataTable({

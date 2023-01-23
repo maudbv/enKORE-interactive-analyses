@@ -62,14 +62,45 @@ total_df$hypothesis <- str_replace(string = total_df$hypothesis,
                                    replacement = "Biotic resistance")
   
 # Homogenize continent information ####
+total_df$Continent_old <-  total_df$Continent
+
 total_df$Continent <- str_replace_all(
   str_replace(
     str_replace(total_df$Continent,"\\[", ""),
     "\\]", ""),
   "'", "")
-## Create a column that is a list of Continents :
-total_df$continents <- str_split(tolower(total_df$Continent), pattern = ",")
 
+# correct typos
+continents_vec <-  c("Africa","Asia","Antarctica","Europe", "North-America", "South-America","Oceania")
+total_df$Continent <- str_replace_all(total_df$Continent,pattern = 'North ', 'North-')
+total_df$Continent <- str_replace_all(total_df$Continent,pattern = 'South ', 'South-')
+total_df$Continent <- str_replace_all(total_df$Continent,pattern = 'North ', 'North-')
+total_df$Continent <- str_replace_all(total_df$Continent,pattern = 'Hawaii ', '')
+total_df$Continent <- str_replace_all(total_df$Continent,pattern = ';', ',')
+total_df$Continent <- str_replace_all(total_df$Continent,pattern = ', ', ',')
+
+total_df$Continent <- str_replace_all(total_df$Continent,
+                                      pattern = 'All continents except Antarctica',
+                                      replacement = paste(continents_vec[-3], collapse = ","))
+total_df$Continent <- str_replace_all(total_df$Continent,
+                                      pattern = 'All continents except Antarctica and Asia',
+                                      replacement = paste(continents_vec[-c(2,3)], collapse = ","))
+total_df$Continent <- str_replace_all(total_df$Continent,
+                                      pattern = 'All continents except Asia and Antarctica',
+                                      replacement = paste(continents_vec[-c(2,3)], collapse = ","))
+total_df$Continent <- str_replace_all(total_df$Continent,
+                                      pattern = 'All continents',
+                                      replacement = paste(continents_vec, collapse = ","))
+
+total_df$Continent <- str_replace_all(total_df$Continent,pattern = ' and ', ',')
+total_df$Continent <- str_replace_all(total_df$Continent,
+                                      pattern = ' ',
+                                      replacement = ",")
+
+
+## Create a column that is a list of Continents :
+total_df$continents <- str_split(total_df$Continent, pattern = ",")
+table(unlist(total_df$continents))
 # Homogenize taxa information ####
 
 taxa_col <-  total_df$Investigated_species
@@ -100,21 +131,30 @@ taxa_col  <- str_replace_all(
 total_df$Investigated_species <- taxa_col
 
 ## Create a column that is a list of taxon :
- total_df$taxa <- str_split(tolower(total_df$Investigated_species) , pattern = ",")
+total_df$taxa <- str_split(tolower(total_df$Investigated_species) , pattern = ",")
  
 #### TODO : add here a column with higher level taxa grouping
  
 # Homogenize Habitat information ####
 # Create a habitat column that is a list of habitat :
-total_df$Habitat <- str_split(tolower(total_df$Habitat) , pattern = "/")
+total_df$Habitat <- str_replace_all(str_replace_all(string = total_df$Habitat, 
+                                            pattern = "/",replacement = ","),
+                                    pattern = " and ", replacement = ",")
+total_df$Habitat[which(total_df$Habitat=="x")]  <-  NA
 
+total_df$Habitat_list <- str_split(tolower(total_df$Habitat) , pattern = c(","))
+ 
 # Homogenize method information ####
-total_df$Research_Method[grep("obs", total_df$Research_Method, ignore.case = TRUE)] <-  "observational"
-total_df$Research_Method[grep("experim", total_df$Research_Method, ignore.case = TRUE)] <-  "experimental"
+total_df$Research_Method[
+  grep("obs", total_df$Research_Method, ignore.case = TRUE)] <-  "observational"
+total_df$Research_Method[
+  grep("experim", total_df$Research_Method, ignore.case = TRUE)] <-  "experimental"
 
 # create clean vectors of filtering factor ####
 taxa_groups <-  sort(unique(tolower(unlist(total_df$taxa))))
 taxa_groups <- taxa_groups[which((taxa_groups != "") & !is.na(taxa_groups))]
 
-habitat_groups <- sort(unique(tolower(unlist(total_df$Habitat))))
+habitat_groups <- sort(unique(tolower(unlist(total_df$Habitat_list))))
 method_groups <- sort(unique(tolower(unlist(total_df$Research_Method))))
+continents_vec<- sort(unique(unlist(total_df$continents)))
+
