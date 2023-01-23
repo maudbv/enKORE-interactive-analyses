@@ -32,6 +32,7 @@ source("resources/functions/app_helper.R")
 source("resources/functions/plot_chrono.R")
 source("resources/functions/plot_piechart.R")
 source("resources/functions/plot_radialplots.R")
+source("resources/functions/plot_barplot.R")
 
 # User Interface ####
 ui <- bootstrapPage(
@@ -217,21 +218,21 @@ server <- function(input, output, session) {
   # Distribution
   output$support_habitats <- renderPlotly( {
     req(filtered_df())
-    plot_radial(filtered_df(), group_col = "Habitat_list", grouping = habitat_groups)
+    plot_barplot(filtered_df(), group_col = "Habitat_list", grouping = habitat_groups)
   })
   output$support_methods <- renderPlotly( {
     req(filtered_df())
-    plot_radial(filtered_df(), group_col = "Research_Method", grouping = method_groups)
+    plot_barplot(filtered_df(), group_col = "Research_Method", grouping = method_groups)
   })
   
   output$support_taxa <- renderPlotly( {
     req(filtered_df())
-    plot_radial(filtered_df(),group_col = "taxa", grouping =  taxa_groups)
+    plot_barplot(filtered_df(),group_col = "taxa", grouping =  taxa_groups)
   })
   
   output$support_continents <- renderPlotly( {
     req(filtered_df())
-    plot_radial(filtered_df(), group_col = "continents", grouping = continents_vec)
+    plot_barplot(filtered_df(), group_col = "continents", grouping = continents_vec)
   })
   
   # Data table
