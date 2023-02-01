@@ -5,8 +5,6 @@ require(purrr)
 require(dplyr)
 require(readr)
 
-taxa_grouping <-  read_csv("resources/additional data/taxa grouping.csv", show_col_types = FALSE)
-
 all_files <- list.files('resources/csv', pattern = 'comparison*', full.names = TRUE)
 df_list <- map(all_files,
                  ~.x %>% readr::read_csv(show_col_types = FALSE))
@@ -38,6 +36,13 @@ total_df <- Reduce(
   function(x, y, ...) merge(x, y, all = TRUE, ...),
   df_list
 )
+
+# correct some strange typos:
+total_df$publication <- str_replace_all(total_df$publication,"\n","")
+total_df$publication <- str_replace_all(total_df$publication,"\"","\'")
+
+total_df$index <- str_replace_all(total_df$index,"\n","")
+total_df$index <- str_replace_all(total_df$index,"\"","\'")
 
 # reformat column names
 total_df$Title <- total_df$publication
@@ -101,8 +106,8 @@ total_df$Continent <- str_replace_all(total_df$Continent,
 ## Create a column that is a list of Continents :
 total_df$continents <- str_split(total_df$Continent, pattern = ",")
 table(unlist(total_df$continents))
-# Homogenize taxa information ####
 
+# Homogenize taxa information ####
 taxa_col <-  total_df$Investigated_species
 
 taxa_col <- str_replace_all(string = taxa_col, "Inscets","Insects")
@@ -134,7 +139,38 @@ total_df$Investigated_species <- taxa_col
 total_df$taxa <- str_split(tolower(total_df$Investigated_species) , pattern = ",")
  
 #### TODO : add here a column with higher level taxa grouping
- 
+taxa_grouping <-  read_csv("resources/additional data/taxa grouping.csv", show_col_types = FALSE)
+
+taxa_grouping <- taxa_grouping %>% 
+  group_by((taxa_groups_large)) %>% 
+  arrange((taxa_groups), .by_group = TRUE)
+
+
+taxa_labels <-  unique(tolower(unlist(total_df$taxa)))
+taxa_labels <- taxa_groups[which((taxa_groups != "") & !is.na(taxa_groups))]
+
+taxa_groups <- unique(taxa_grouping$taxa_groups)
+taxa_groups <- taxa_groups[-which(taxa_groups == "any")]
+taxa_groups_large <- sort(unique(taxa_grouping$taxa_groups_large))
+taxa_groups_large <- taxa_groups_large[-which(taxa_groups_large == "any")]
+
+# create columns with taxa groups
+total_df$taxa_group <- lapply(total_df$taxa, FUN = function(x) {
+  taxa_grouping$taxa_groups[match(x, taxa_grouping$taxa_label)]
+})
+total_df$taxa_group <- lapply(total_df$taxa_group, FUN = function(x){
+  if ("any" %in% x) return(taxa_groups)
+  else x
+})
+
+total_df$taxa_group_large <- lapply(total_df$taxa, FUN = function(x) {
+  taxa_grouping$taxa_groups_large[match(x, taxa_grouping$taxa_label)]
+})
+total_df$taxa_group_large <- lapply(total_df$taxa_group_large, FUN = function(x){
+  if ("any" %in% x) return(taxa_groups_large)
+  else x
+})
+
 # Homogenize Habitat information ####
 # Create a habitat column that is a list of habitat :
 total_df$Habitat <- str_replace_all(str_replace_all(string = total_df$Habitat, 
@@ -151,9 +187,6 @@ total_df$Research_Method[
   grep("experim", total_df$Research_Method, ignore.case = TRUE)] <-  "experimental"
 
 # create clean vectors of filtering factor ####
-taxa_groups <-  sort(unique(tolower(unlist(total_df$taxa))))
-taxa_groups <- taxa_groups[which((taxa_groups != "") & !is.na(taxa_groups))]
-
 habitat_groups <- sort(unique(tolower(unlist(total_df$Habitat_list))))
 method_groups <- sort(unique(tolower(unlist(total_df$Research_Method))))
 continents_vec<- sort(unique(unlist(total_df$continents)))

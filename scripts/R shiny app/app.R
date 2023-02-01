@@ -100,20 +100,20 @@ ui <- bootstrapPage(
                                      
                                     fluidRow( 
                                       column(plotlyOutput("support_habitats"),
-                                             width = 5,
-                                             height = 5),
+                                             width = 10,
+                                             height = 5)),
+                                    fluidRow(
                                       column( plotlyOutput("support_methods"),  
                                               height = 5,
-                                              width = 5)
-                                    ),
+                                              width = 10)),
                                     fluidRow(
                                       column(plotlyOutput("support_taxa"),
-                                             width = 5,
-                                             height = 5),
+                                             width = 10,
+                                             height = 5)),
+                                    fluidRow(
                                       column(plotlyOutput("support_continents"),
-                                             width = 5,
-                                             height = 5)
-                                    ),
+                                             width = 10,
+                                             height = 5)),
                                     tags$br()
                            ),
                            
@@ -146,7 +146,7 @@ server <- function(input, output, session) {
       req(input$taxa)
       filter(total_df, hypothesis == input$hyp) %>% 
         { if (! "All" %in% input$taxa) {
-          dplyr::filter(., .detect_items(taxa, input$taxa))} else {.} 
+          dplyr::filter(., .detect_items(taxa_group, input$taxa))} else {.} 
         }
     })
     
@@ -185,6 +185,7 @@ server <- function(input, output, session) {
     counts <- df %>% count(support_for_hypothesis, sort = FALSE)
     return(round(counts$n[which(counts$support_for_hypothesis == "Supported")]/sum(counts$n)*100,2))
   })
+  
   # Plot chronology figure
  
   # output$chronology <- renderPlotly( {
@@ -218,21 +219,33 @@ server <- function(input, output, session) {
   # Distribution
   output$support_habitats <- renderPlotly( {
     req(filtered_df())
-    plot_barplot(filtered_df(), group_col = "Habitat_list", grouping = habitat_groups)
+    plot_barplot(filtered_df(),
+                 group_col = "Habitat_list",
+                 grouping = habitat_groups,
+                 legend.show = FALSE)
   })
   output$support_methods <- renderPlotly( {
     req(filtered_df())
-    plot_barplot(filtered_df(), group_col = "Research_Method", grouping = method_groups)
+    plot_barplot(filtered_df(),
+                 group_col = "Research_Method",
+                 grouping = method_groups,
+                 legend.show = FALSE)
   })
   
   output$support_taxa <- renderPlotly( {
     req(filtered_df())
-    plot_barplot(filtered_df(),group_col = "taxa", grouping =  taxa_groups)
+    plot_barplot(filtered_df(),
+                 group_col = "taxa_group",
+                 grouping =  taxa_groups,
+                 legend.show = FALSE)
   })
   
   output$support_continents <- renderPlotly( {
     req(filtered_df())
-    plot_barplot(filtered_df(), group_col = "continents", grouping = continents_vec)
+    plot_barplot(filtered_df(),
+                 group_col = "continents",
+                 grouping = continents_vec,
+                 legend.show = FALSE)
   })
   
   # Data table
