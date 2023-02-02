@@ -5,7 +5,6 @@
 #### TODO
 #improve page layout : with sub plots for sub hyps
 # sort problem of repeated study names for enemy release for instance
-# add radar plot for the proportion of each category
 
 # Load packages ####
 library(shiny)
@@ -20,7 +19,8 @@ require(shinythemes)
 library(DT)
 
 # import and pre-process data ####
-source('data processing.R')
+source('resources/data processing.R')
+source("resources/hyp_network_viz/martin_network_viz.R")
 
 # Get colours and style themes ####
 source("resources/ggplot_HiK_theme.R")
@@ -125,8 +125,16 @@ ui <- bootstrapPage(
                         )
                       )
              ),
-             
-             # Second page: about the project
+             # second page: network visualization
+             tabPanel("Hypotheses network",
+                      fluidRow( 
+                        column(visNetworkOutput("network"),
+                               width = 12,
+                               height = 10)),
+                      tags$br(),
+                      "Network of similarity between 39 hypotheses according to Enders et al. 2020, Global Ecology and Biogeography"),
+
+             # Third page: about the project
              tabPanel("About the project",
                       "This is a work in progress from the enKORE project, funded by the Volkswagen Stiftung, Germany.",
                       tags$br(),
@@ -257,6 +265,31 @@ server <- function(input, output, session) {
     df <-  df[, display_columns]
   })
   
+  # network
+  output$network <- renderVisNetwork({
+    visNetwork(nodes, edges, width = "100%") %>%
+      visIgraphLayout() %>%
+      visNodes(
+        shape = "dot",
+        color = list(
+          background = "#0085AF",
+          border = "#013848",
+          highlight = "#FF8000"
+        ),
+        shadow = list(enabled = TRUE, size = 10),
+        label = "name",font = list(size = 40)
+      ) %>%
+      visEdges(
+        shadow = FALSE,
+        color = list(color = "#0085AF", highlight = "#C62F4B")
+      ) %>%
+      visOptions(highlightNearest = list(enabled = T, degree = 1, hover = T),
+                 selectedBy = list(variable = "name", main = "Select hypothesis"),
+                 autoResize = TRUE) %>%
+      visPhysics(stabilization = FALSE) %>%
+      visLayout(randomSeed = 11)
+    
+  })
 }
 
 shinyApp(ui = ui, server = server)

@@ -141,18 +141,18 @@ total_df$taxa <- str_split(tolower(total_df$Investigated_species) , pattern = ",
 #### TODO : add here a column with higher level taxa grouping
 taxa_grouping <-  read_csv("resources/additional data/taxa grouping.csv", show_col_types = FALSE)
 
+# order taxa groups in the table:
 taxa_grouping <- taxa_grouping %>% 
   group_by((taxa_groups_large)) %>% 
   arrange((taxa_groups), .by_group = TRUE)
 
-
-taxa_labels <-  unique(tolower(unlist(total_df$taxa)))
-taxa_labels <- taxa_groups[which((taxa_groups != "") & !is.na(taxa_groups))]
-
+# extract taxa names and groups
 taxa_groups <- unique(taxa_grouping$taxa_groups)
 taxa_groups <- taxa_groups[-which(taxa_groups == "any")]
 taxa_groups_large <- sort(unique(taxa_grouping$taxa_groups_large))
 taxa_groups_large <- taxa_groups_large[-which(taxa_groups_large == "any")]
+taxa_labels <-  unique(tolower(unlist(total_df$taxa)))
+taxa_labels <- taxa_groups[which((taxa_groups != "") & !is.na(taxa_groups))]
 
 # create columns with taxa groups
 total_df$taxa_group <- lapply(total_df$taxa, FUN = function(x) {
