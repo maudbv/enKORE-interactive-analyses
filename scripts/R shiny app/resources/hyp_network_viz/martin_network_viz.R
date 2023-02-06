@@ -92,7 +92,7 @@ edge_num <- E(network)$weight
 E(network)$weight <-  abs(edge_num)
 
 # convert to networkD3 (needs groups)
-net <- igraph_to_networkD3(network,group = membership(cluster))
+#net <- igraph_to_networkD3(network,group = membership(cluster))
 net <- igraph_to_networkD3(network,group = rep(1,length(network)))
 
 # add real names
