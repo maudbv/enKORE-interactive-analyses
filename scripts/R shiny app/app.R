@@ -21,6 +21,7 @@ library(DT)
 # import and pre-process data ####
 source('resources/data processing.R')
 source("resources/hyp_network_viz/martin_network_viz.R")
+source("resources/functions/plot_network.R")
 
 # Get colours and style themes ####
 source("resources/ggplot_HiK_theme.R")
@@ -267,28 +268,7 @@ server <- function(input, output, session) {
   
   # network
   output$network <- renderVisNetwork({
-    visNetwork(nodes, edges, width = "100%") %>%
-      visIgraphLayout() %>%
-      visNodes(
-        shape = "dot",
-        color = list(
-          background = "#0085AF",
-          border = "#013848",
-          highlight = "#FF8000"
-        ),
-        shadow = list(enabled = TRUE, size = 10),
-        label = "name",font = list(size = 40)
-      ) %>%
-      visEdges(
-        shadow = FALSE,
-        color = list(color = "#0085AF", highlight = "#C62F4B")
-      ) %>%
-      visOptions(highlightNearest = list(enabled = T, degree = 1, hover = T),
-                 selectedBy = list(variable = "name", main = "Select hypothesis"),
-                 autoResize = TRUE) %>%
-      visPhysics(stabilization = FALSE) %>%
-      visLayout(randomSeed = 11)
-    
+    plot_network(nodes, edges, width = "100%")
   })
 }
 
