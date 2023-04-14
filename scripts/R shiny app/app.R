@@ -127,7 +127,7 @@ ui <- bootstrapPage(
                       )
              ),
              # second page: network visualization
-             tabPanel("Hypotheses network",
+             tabPanel("Hypothesis network",
                       fluidRow( 
                         column(visNetworkOutput("network"),
                                width = 12,
