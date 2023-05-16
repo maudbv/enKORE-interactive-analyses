@@ -1,4 +1,4 @@
-# Developping interactive visualizations of ORKG comparisons for Invasion Biology
+# Interactive visualizations for synthesis in invasion biology
 
 authors: Maud Bernard-Verdier, Kamel Fadel
 
