@@ -21,7 +21,8 @@ library(DT)
 # import and pre-process data ####
 source('resources/data processing.R')
 source("resources/hyp_network_viz/martin_network_viz.R")
-source("resources/functions/plot_network.R")
+source("resources/hyp_network_viz/themes_network_viz.R")
+# source("resources/functions/plot_network.R")
 
 # Get colours and style themes ####
 source("resources/ggplot_HiK_theme.R")
@@ -127,13 +128,28 @@ ui <- bootstrapPage(
                       )
              ),
              # second page: network visualization
-             tabPanel("Hypothesis network",
-                      fluidRow( 
-                        column(visNetworkOutput("network"),
-                               width = 12,
-                               height = 10)),
-                      tags$br(),
-                      "Network of similarity between 39 hypotheses according to Enders et al. 2020, Global Ecology and Biogeography"),
+            tabPanel("Invasion Hypothesis networks",
+                     tabsetPanel(
+                         
+                      # Panel 1: Organisation by Research hypotheses
+                      tabPanel("Research questions",
+                               fluidRow( 
+                                 column(visNetworkOutput("rhrq_network"),
+                                        width = 12,
+                                        height = 10)),
+                               tags$br(),
+                               "Bipartite network illustrating the distribution of hypotheses among eight major research questions in invasion biology. The network is based on ongoing expert assessment and classification of hypotheses within the enKORE project"),
+                      
+                      # Panel 2: Martin Ender's network
+                      tabPanel("Similarity network",
+                               fluidRow( 
+                                 column(visNetworkOutput("martin_network"),
+                                        width = 12,
+                                        height = 10)),
+                               tags$br(),
+                               "Network of similarity between 39 hypotheses according to Enders et al. 2020, Global Ecology and Biogeography")
+                      
+                      )),
 
              # Third page: about the project
              tabPanel("About the project",
@@ -266,9 +282,14 @@ server <- function(input, output, session) {
     df <-  df[, display_columns]
   })
   
-  # network
-  output$network <- renderVisNetwork({
-    plot_network(nodes, edges, width = "100%")
+  # Martin's network
+  output$martin_network <- renderVisNetwork({
+    plot_martin_network(nodes_martin, edges_martin)
+  })
+  
+  # RHRQ network of hypotheses
+  output$rhrq_network <- renderVisNetwork({
+    plot_rhrq_network(nodes_rhrq, edges_rhrq)
   })
 }
 

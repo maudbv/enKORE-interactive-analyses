@@ -96,10 +96,10 @@ E(network)$weight <-  abs(edge_num)
 # net <- igraph_to_networkD3(network,group = membership(cluster))
 # 
 # # add real names
-# net$nodes$long_name <-  martin_matrix_abb$hyp[match(net$nodes$name, martin_matrix_abb$abb)]
+# net$nodes_martin$long_name <-  martin_matrix_abb$hyp[match(net$nodes_martin$name, martin_matrix_abb$abb)]
 # 
 # # interactive visualization:
-# forceNetwork(Links = net$links, Nodes = net$nodes,
+# forceNetwork(Links = net$links, nodes_martin = net$nodes,
 #              Source = "source", Target = "target",
 #              Value = "value", NodeID = "long_name",
 #              Group = "group", opacity = 0.8,
@@ -117,58 +117,58 @@ edge_num <- E(network)$weight
 E(network)$weight <-  abs(edge_num)
 
 ## with vizNetwork
-# convert to networkD3 DOES nOT work here! Introduces false links...
+# convert to networkD3 DOES NOT WORK here! Introduces false links...
 # net <- igraph_to_networkD3(network,group = rep(1,length(network)))
 
 # add real names
-# net$nodes$long_name <-  martin_matrix_abb$hyp[match(net$nodes$name, martin_matrix_abb$abb)]
+# net$nodes_martin$long_name <-  martin_matrix_abb$hyp[match(net$nodes_martin$name, martin_matrix_abb$abb)]
 
 #Nodes
-nodes <- data.frame(
+nodes_martin <- data.frame(
   id = 1 : length(vertex_attr(network)$name),
   label = vertex_attr(network)$name
 )
 
 # add node info: 
-nodes$name = hyp_def[match(nodes$label,hyp_def$Hypothesis),"Name"]
-nodes$def = hyp_def[match(nodes$label,hyp_def$Hypothesis),"Definition"]
-nodes$Wikidata = hyp_def[match(nodes$label,hyp_def$Hypothesis),"Wikidata.ID"]
+nodes_martin$name = hyp_def[match(nodes_martin$label,hyp_def$Hypothesis),"Name"]
+nodes_martin$def = hyp_def[match(nodes_martin$label,hyp_def$Hypothesis),"Definition"]
+nodes_martin$Wikidata = hyp_def[match(nodes_martin$label,hyp_def$Hypothesis),"Wikidata.ID"]
 
 # ender's clusters
-nodes$group = hyp_def[match(nodes$label,hyp_def$Hypothesis),
+nodes_martin$group = hyp_def[match(nodes_martin$label,hyp_def$Hypothesis),
                       "Cluster.in.Enders.et.al..2020"]
 
-#Edges
-edges <- as.data.frame(as_edgelist(network, names = FALSE))
-colnames(edges) <- c("from", "to")
 
-nodes$clusters <- paste(
-  stringr::str_replace_all(nodes$group,
-                         pattern = ";", 
-                         replace = " cluster, "),
-      "cluster")
+# Edges ####
+edges_martin <- as.data.frame(as_edgelist(network, names = FALSE))
+colnames(edges_martin ) <- c("from", "to")
 
-# format vis
-nodes <-  data.frame(
-  nodes,
-   # tooltip (html or character), when the mouse is above
-  title = paste0("<p><b>", nodes$name,
+nodes_martin$clusters <- paste(
+  stringr::str_replace_all(nodes_martin$group,
+                           pattern = ";", 
+                           replace = " cluster, "),
+  "cluster")
+
+# format vis ####
+nodes_martin <-  data.frame(
+  nodes_martin,
+  # tooltip (html or character), when the mouse is above
+  title = paste0("<p><b>", nodes_martin$name,
                  "</b><br> <i>",
-                 nodes$clusters,
+                 nodes_martin$clusters,
                  "</i></p>"),
   
-  # font.size = c(10,20)[nodes$group+1],
+  # font.size = c(10,20)[nodes_martin$group+1],
   # shadow
   shadow = FALSE 
 )
 
 
-# #plot network
+# Plot network ####
 
-plot_uni_network <-  function(n = nodes, e = edges,g = "group", w = "100%") {
-  p <-  visNetwork(
-    nodes,
-    edges,
+plot_martin_network <-  function(n = nodes_martin, e = edges_martin,
+                              g = "group", w = "100%") {
+  p <-  visNetwork(nodes = n,edges = e,  height = "600px",
     main = list(
       text = "Similarity among hypotheses in Invasion Ecology",
       style = "font-family:Roboto slab;color:#0085AF;font-size:18px;text-align:center;"),
@@ -183,7 +183,7 @@ plot_uni_network <-  function(n = nodes, e = edges,g = "group", w = "100%") {
   ) %>%
   visNodes(
     shape = "dot",
-    group = "group",
+    group = g,
     color = list(
       border = "#013848",
       highlight = "#FF8000"),

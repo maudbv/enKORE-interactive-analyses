@@ -30,54 +30,54 @@ rhrq_mat <- rhrq_mat[ ,-1]
 # convert to networkD3 DOES nOT work here! Introduces false links...
 # net <- igraph_to_networkD3(network, group = vertex_attr(network)$type)
 
-#Nodes
-nodes <- data.frame(
+#nodes_rhrq
+nodes_rhrq <- data.frame(
   id = 1 : length(vertex_attr(network)$name),
   as.data.frame(vertex_attr(network), col.names = c("group","label")))
 
 # type of node
-nodes$type =  c("Hypothesis","Research question")[nodes$group+1]
+nodes_rhrq$type =  c("Hypothesis","Research question")[nodes_rhrq$group+1]
 
 # give full node names 
-nodes$name = theme_rq_mat[match(nodes$label,theme_rq_mat$RQ_abb),"Research question"]
+nodes_rhrq$name = theme_rq_mat[match(nodes_rhrq$label,theme_rq_mat$RQ_abb),"Research question"]
 
-nodes[is.na(nodes$name), "name"] <- hyp_def$Name[
-  match(nodes$label[is.na(nodes$name)],
+nodes_rhrq[is.na(nodes_rhrq$name), "name"] <- hyp_def$Name[
+  match(nodes_rhrq$label[is.na(nodes_rhrq$name)],
         hyp_def$Hypothesis)]
 
 # theme
-nodes$theme = theme_rq_mat[match(nodes$label,theme_rq_mat$RQ_abb),"Theme"]
+nodes_rhrq$theme = theme_rq_mat[match(nodes_rhrq$label,theme_rq_mat$RQ_abb),"Theme"]
 
 
 # format vis
-nodes <-  data.frame(
-  nodes,
-  # control shape of nodes
-  shape = c("ellipse", "ellipse")[nodes$group+1],
+nodes_rhrq <-  data.frame(
+  nodes_rhrq,
+  # control shape of nodes_rhrq
+  shape = c("ellipse", "ellipse")[nodes_rhrq$group+1],
   
   # tooltip (html or character), when the mouse is above
-  title = paste0("<p><i>", nodes$type,"</i><br><b>", nodes$name, "</b><br> </p>"),
+  title = paste0("<p><i>", nodes_rhrq$type,"</i><br><b>", nodes_rhrq$name, "</b><br> </p>"),
   
   # color
-  color = c("#0085AF", "white")[nodes$group+1],
+  color = c("#0085AF", "white")[nodes_rhrq$group+1],
   
   # texf format
-  font.color = c("black", "firebrick")[nodes$group+1], 
-  # font.size = c(10,20)[nodes$group+1],
+  font.color = c("black", "firebrick")[nodes_rhrq$group+1], 
+  # font.size = c(10,20)[nodes_rhrq$group+1],
   # shadow
   shadow = FALSE 
 )
 
 #Edges
-edges <- as.data.frame(as_edgelist(network, names = FALSE))
-colnames(edges) <- c("from", "to")
+edges_rhrq <- as.data.frame(as_edgelist(network, names = FALSE))
+colnames(edges_rhrq) <- c("from", "to")
 
 # plot
 
-plot_RQRH_network <- function(n = nodes, e = edges) {
+plot_rhrq_network <- function(n = nodes_rhrq, e = edges_rhrq) {
   
  p <- visNetwork(n , e,
-           height = "800px",
+           height = "600px",
            width = "100%",
            main = list(
              text = "Research questions and hypotheses in Invasion Ecology",
