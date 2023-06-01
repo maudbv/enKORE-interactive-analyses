@@ -9,7 +9,6 @@
 # Load packages ####
 library(shiny)
 library(ggplot2)
-library(dplyr)
 library(plotly)
 library(sysfonts)
 library(dplyr)
@@ -17,6 +16,12 @@ require(shinyWidgets)
 require(shinyjs)
 require(shinythemes)
 library(DT)
+library(readr)
+library(igraph)
+library(networkD3)
+library(ggraph)
+library(tidyverse)
+library(visNetwork)
 
 # import and pre-process data ####
 source('resources/data processing.R')

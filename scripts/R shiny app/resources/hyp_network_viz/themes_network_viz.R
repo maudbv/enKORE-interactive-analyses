@@ -1,12 +1,11 @@
 # Visualize network of hypotheses from Enders et al.
 
 # Libraries
-library(readr)
-library(igraph)
-library(networkD3)
-library(ggraph)
-library(tidyverse)
-library(visNetwork)
+require(readr)
+require(igraph)
+require(networkD3)
+require(ggraph)
+require(visNetwork)
 
 
 # Import network of 39 hyps by Enders et al.  ####
@@ -76,26 +75,31 @@ colnames(edges_rhrq) <- c("from", "to")
 
 plot_rhrq_network <- function(n = nodes_rhrq, e = edges_rhrq) {
   
- p <- visNetwork(n , e,
-           height = "600px",
-           width = "100%",
-           main = list(
-             text = "Research questions and hypotheses in Invasion Ecology",
-             style = "font-family:Roboto slab;color:#0085AF;font-size:18px;text-align:center;")) %>%
-  visIgraphLayout() %>%
-  visNodes(
-    font = list(size = 40)
-  ) %>%
-  visEdges(
-    shadow = FALSE,
-    color = list(color = "#0085AF", highlight = "#C62F4B")
-  ) %>%
-  visOptions(highlightNearest = list(enabled = T, degree = 1, hover = T),
-             autoResize = TRUE) %>%
-  visPhysics(stabilization = FALSE) %>%
-  visLayout(randomSeed = 11)
- 
-  return(p)
- }
+ p <- visNetwork::visNetwork(
+   n ,
+   e,
+   height = "600px",
+   width = "100%",
+   main = list(
+     text = "Research questions and hypotheses in Invasion Ecology",
+     style = "font-family:Roboto slab;color:#0085AF;font-size:18px;text-align:center;")) %>%
+   visNodes(
+     font = list(size = 40)
+   ) %>%
+   visEdges(
+     shadow = FALSE,
+     color = list(color = "#0085AF", highlight = "#C62F4B")
+   ) %>%
+   visOptions(highlightNearest = list(enabled = T, degree = 1, hover = T),
+              autoResize = TRUE,
+              manipulation = FALSE,
+              selectedBy = "theme") %>%
+   visPhysics(solver = "forceAtlas2Based", 
+              forceAtlas2Based = list(gravitationalConstant = -90)) %>%
+   visInteraction(navigationButtons = TRUE) 
+ #%>%
+ # visIgraphLayout(layout = "layout_with_kk")
+ return(p)
+}
 
-
+plot_rhrq_network()

@@ -163,7 +163,6 @@ nodes_martin <-  data.frame(
   shadow = FALSE 
 )
 
-
 # Plot network ####
 
 plot_martin_network <-  function(n = nodes_martin, e = edges_martin,
