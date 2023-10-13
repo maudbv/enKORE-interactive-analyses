@@ -176,8 +176,13 @@ total_df$taxa_group_large <- lapply(total_df$taxa_group_large, FUN = function(x)
 total_df$Habitat <- str_replace_all(str_replace_all(string = total_df$Habitat, 
                                             pattern = "/",replacement = ","),
                                     pattern = " and ", replacement = ",")
-total_df$Habitat[which(total_df$Habitat=="x")]  <-  NA
+total_df$Habitat[which(total_df$Habitat=="x")]  <-  "undetermined"
 
+# Group "Brackishwater" with freshwater research for simplification (and because represented by only a few studies )
+total_df$Habitat <- str_replace_all(string = total_df$Habitat, 
+                pattern = "(b|B)rackishwater",replacement = "freshwater" )
+
+#Convert to a list to be able to list unique habitats
 total_df$Habitat_list <- str_split(tolower(total_df$Habitat) , pattern = c(","))
  
 # Homogenize method information ####

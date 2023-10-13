@@ -186,7 +186,7 @@ server <- function(input, output, session) {
     output$habitat_selector <- renderUI({
       selectInput(inputId = "hab",
                   label = "Select a habitat",
-                  choices =  c("All", unique(unlist(hyp_taxa()$Habitat))))
+                  choices =  c("All", unique(unlist(hyp_taxa()$Habitat_list))))
     })
     
     hyp_taxa_hab <- reactive({
