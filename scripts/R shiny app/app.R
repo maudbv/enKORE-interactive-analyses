@@ -1,9 +1,9 @@
-# Shiny app dashboard to explore hypotheses in invasion science
+# Shiny app dashboard to explore hypotheses in invasion biology
 # author: Maud Bernard-Verdier
 # source: orkg.org
 
 #### TODO
-#improve page layout : with sub plots for sub hyps
+# improve page layout : with sub plots for sub hyps
 # sort problem of repeated study names for enemy release for instance
 
 # Load packages ####
@@ -24,6 +24,7 @@ library(tidyverse)
 library(visNetwork)
 
 # import and pre-process data ####
+source("resources/Hypothesis index.R")
 source('resources/data processing.R')
 source("resources/hyp_network_viz/martin_network_viz.R")
 source("resources/hyp_network_viz/themes_network_viz.R")
@@ -41,25 +42,27 @@ source("resources/functions/plot_piechart.R")
 source("resources/functions/plot_radialplots.R")
 source("resources/functions/plot_barplot.R")
 
+
+
 # User Interface ####
 ui <- bootstrapPage(
   navbarPage(theme = shinytheme("flatly"),
              collapsible = TRUE,
              HTML('<a style="text-decoration:none;cursor:default;color:#FFFFFF;" class="active" href="#">Hypotheses in Invasion Biology</a>'),
              id="nav",
-             windowTitle = "Exploring hypotheses in Invasion Science",
+             windowTitle = "Exploring hypotheses in Invasion Biology",
              
              # First page: Interactive exploration of evidence supporting individual hyps
              tabPanel("Evidence for each hypothesis",
                       sidebarLayout(
                         sidebarPanel(
                           
-                          "Explore the evidence available for major hypotheses in Invasion Science.
+                          "Explore the evidence available for major hypotheses in Invasion Biology.
                           You can filter studies by taxa, habitats or research method",
                           tags$br(),
                           tags$br(),
                           selectInput('hyp', 'Select a hypothesis',
-                                      c(unique(total_df$hypothesis))),
+                                      c(unique(total_df$hypothesis))), #TODO fix labels
                           
                           pickerInput(inputId = 'taxa',
                                       'Select a taxonomic group',
@@ -70,7 +73,7 @@ ui <- bootstrapPage(
                                                      `none-selected-text` = "Please make a selection!")
                           ),
                           
-                          uiOutput("habitat_selector"),
+                          uiOutput("habitat_selector"), 
                           
                           uiOutput("method_selector"),
                           
@@ -90,7 +93,7 @@ ui <- bootstrapPage(
                                     tags$br(),
                                     h3(textOutput("hyp_description")),
                                     fluidRow(
-                                      column(plotlyOutput('support_piechart', height = "200px"),
+                                      column(plotlyOutput('support_piechart', height = "200px"), # TODO FIX colorcoding
                                              width = 5),
                                       column( p(textOutput("support_summary"), 
                                                 style="text-align:left;color:#27596B;padding:15px;border-radius:10px"),
@@ -126,14 +129,14 @@ ui <- bootstrapPage(
                            
                            # Panel 2: Filtered data table
                            tabPanel("Data",  
-                           DT::dataTableOutput("filtered_data")
+                           DT::dataTableOutput("filtered_data") #TODO update type of table output for more interaction +add years
                            )
                           )
                         )
                       )
              ),
              # second page: network visualization
-            tabPanel("Invasion Hypothesis networks",
+            tabPanel("Hypothesis Networks",
                      tabsetPanel(
                          
                       # Panel 1: Organisation by Research hypotheses

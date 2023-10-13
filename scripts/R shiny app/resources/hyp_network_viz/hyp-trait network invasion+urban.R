@@ -11,74 +11,74 @@ library(visNetwork)
 library(dplyr)
 library(grDevices)
 
-# Import network of 39 hyps by Enders et al.  ####
-hyp_mat <- readr::read_csv("resources/additional data/Roxane hyps merged with attributes.csv",
-                           trim_ws = TRUE,skip_empty_rows = TRUE)
-hyp_mat <- as.data.frame(hyp_mat)
+# Import hypohteses table from Roxane Vial  #####
+# source("resources/Hypothesis index.R")
 
-# get unique rownames
-hyp_mat[which(duplicated(hyp_mat$Acronym)),] %>%
-  select(Acronym, Hypothesis,Definition)
-
-#####
-# Acronym                                         Hypothesis
-# 25       DS                                     Matrix species
-# 59       HP                           Herbivore proliferation*
-# 71       IS Non-native species hypothesis* aka Invader species
-# 96       PO                ﻿Pest outbreaks - defense-free space
-# 99      PPH                             Predator proliferation
-# 118      SP                                     Suburban peak*
-
-# replace redundant acronyms
-hyp_mat[which(duplicated(hyp_mat$Acronym)),"Acronym"] <- c(
-  "MS",    # Matrix Species
-  "HbP",   # Herbivore Proliferation
-  "UIS",   # Urban Invader Species
-  "DFS",   # Defense Free Space
-  "HPPC",  # High Predator Proliferation in Cities"
-  "SUP"    # SubUrban Peak
+# import table of simplified attributes
+hyp_att <- as.data.frame(
+  readr::read_csv(
+    "resources/additional data/hyp attribute selection.csv",
+    trim_ws = TRUE,
+    skip_empty_rows = TRUE
+    )
   )
 
-rownames(hyp_mat) <- hyp_mat$Acronym
+# create replacement vector for column names 
+lookup <- as.vector(hyp_att$attribute)
+names(lookup) <- hyp_att$abb
 
-#Extract the columns corresponding to an incidence matrix
+# change column names
+hyp_mat  <- hyp_mat %>%
+  rename( all_of(lookup))
+
+# transform matrix by grouping columns
+
+
+
+#Extract the columns corresponding to an incidence matrix ####
 hyp_mat_inc <- hyp_mat %>%
-  select(`Behavioral traits`:`in general...64`)
+  select(`Behavior`:`invasion`)
 
 # convert data form Enders PhD (coded with A and B) as 0 and 1: 
-hyp_mat_inc[grep("1B", hyp_mat_inc)] <- 1
-hyp_mat_inc[grep("B", hyp_mat_inc)] <- 0
-hyp_mat_inc[grep("A", hyp_mat_inc)] <- 1
-hyp_mat_inc[grep("C", hyp_mat_inc)] <- 0
+hyp_mat_inc <- hyp_mat_inc %>% 
+  mutate(across(colnames(hyp_mat_inc),
+                ~ stringr::str_replace_all(.x, pattern ="1B", "1"))) %>% 
+  mutate(across(colnames(hyp_mat_inc),
+           ~ stringr::str_replace_all(.x, pattern ="1B", "1"))) %>% 
+  mutate(across(colnames(hyp_mat_inc),
+                ~ stringr::str_replace_all(.x, pattern ="B", "0"))) %>% 
+  mutate(across(colnames(hyp_mat_inc),
+                ~ stringr::str_replace_all(.x, pattern ="A", "1"))) %>% 
+  mutate(across(colnames(hyp_mat_inc),
+                ~ stringr::str_replace_all(.x, pattern ="C", "0")))%>% 
+  mutate(across(colnames(hyp_mat_inc), as.numeric))
 
-# remove all trailing spaces
-hyp_mat_inc <- apply(hyp_mat_inc ,
-                     2 ,
-                     stringr::str_replace_all, pattern = " ", "",
-                     simplify = TRUE)
-       
+# simplify attributes ####
+temp <- as.data.frame(t(hyp_mat_inc),stringsAsFactors = FALSE)
+temp$type <- hyp_att$type 
+temp$group <- hyp_att$group
 
-# convert all to numeric
-hyp_mat_inc <- apply(hyp_mat_inc ,
-                     2 ,
-                     as.numeric,
-                     simplify = TRUE)
+temp <- as.data.frame(temp  %>% 
+    filter(type == "focal entity") %>%
+      group_by(group) %>%
+  summarise(across("AA":"XE", max)))
 
-rownames(hyp_mat_inc) <- hyp_mat$Acronym
+rownames(temp) <- temp$group
+temp <- temp[,-1]
+
+hyp_mat_redux <- as.data.frame(t(temp), stringsAsFactors = FALSE)
 
 
-# build the graph object ####
+# build the igraph object ####
 net_hyp_trait <- graph_from_incidence_matrix(
-  hyp_mat_inc,
+  hyp_mat_redux,
   directed = FALSE,mode = "out")
 
 plot(net_hyp_trait ,
-     layout= layout_with_kk(graph = net_hyp_trait , dim = 3)
-)
+     layout= layout_with_fr)
 
-
-
-# with vizNetwork
+ 
+# with vizNetwork #####
 # convert to networkD3 DOES nOT work here! Introduces false links...
 # net <- igraph_to_networkD3(network, group = vertex_attr(network)$type)
 
@@ -90,14 +90,24 @@ nodes_hyp_trait <- data.frame(
   as.data.frame(vertex_attr(net_hyp_trait))
   )
 
-nodes_hyp_trait <- rename(nodes_hyp_trait, label = name )
-nodes_hyp_trait$name <- c(hyp_mat$Hypothesis, rep(NA,ncol(hyp_mat_incidence)-1))
-nodes_hyp_trait$def <- c(hyp_mat$Definition, rep(NA,ncol(hyp_mat_incidence)-1))
-nodes_hyp_trait$ref <-c(hyp_mat$`Key ref`, rep(NA,ncol(hyp_mat_incidence)-1)) 
-
 # type of node
 nodes_hyp_trait$layer =  c(1,2)[nodes_hyp_trait$type + 1]
 nodes_hyp_trait$style =  c("hypothesis","attribute")[nodes_hyp_trait$type + 1]
+
+# add info about nodes
+nodes_hyp_trait$def <- hyp_mat[match(nodes_hyp_trait$label,
+                                     hyp_mat$Acronym),
+                               "Definition"]
+nodes_hyp_trait$def[ nodes_hyp_trait$type] <- nodes_hyp_trait$name[ nodes_hyp_trait$type]
+
+
+nodes_hyp_trait$name <- hyp_mat[match(nodes_hyp_trait$label,
+                                     hyp_mat$Acronym),
+                               "Hypothesis"]
+nodes_hyp_trait$name [ nodes_hyp_trait$type] <-    nodes_hyp_trait$def[ nodes_hyp_trait$type]
+
+#nodes_hyp_trait$ref <-c(hyp_mat$`Key ref`, rep(NA,ncol(hyp_mat_inc))) 
+
 
 # give full node names 
 
@@ -111,6 +121,8 @@ nodes_hyp_trait <-  data.frame(
                  nodes_hyp_trait$style,
                  "</i><br><b>",
                  nodes_hyp_trait$name,
+                 "</b><br>" ,
+                 nodes_hyp_trait$def,
                  "</b><br> </p>"
                  ),
   
@@ -129,7 +141,6 @@ edges_hyp_trait <- as.data.frame(as_edgelist(net_hyp_trait, names = FALSE))
 colnames(edges_hyp_trait) <- c("from", "to")
 
 # plot
-
 plot_hyp_trait_network <- function(n = nodes_hyp_trait, e = edges_hyp_trait) {
   
  p <- visNetwork::visNetwork(
@@ -138,7 +149,7 @@ plot_hyp_trait_network <- function(n = nodes_hyp_trait, e = edges_hyp_trait) {
    height = "600px",
    width = "100%",
    main = list(
-     text = "Research questions and hypotheses in Invasion Ecology",
+     text = "141 hypotheses from invasion and urban ecology grouped by their focal entity",
      style = "font-family:Roboto slab;color:#0085AF;font-size:18px;text-align:center;")) %>%
    visNodes(
      font = list(size = 80),
@@ -153,13 +164,58 @@ plot_hyp_trait_network <- function(n = nodes_hyp_trait, e = edges_hyp_trait) {
               manipulation = FALSE) %>%
    visPhysics(enabled = FALSE,
               solver = "forceAtlas2Based", 
-              forceAtlas2Based = list(gravitationalConstant = -200)) %>%
+              forceAtlas2Based = list(gravitationalConstant = 10)) %>%
    visInteraction(navigationButtons = TRUE) %>%
-   visIgraphLayout(layout = layout_with_kk)
+   visIgraphLayout()
    
  return(p)
-}
+
+ }
 
 p <- plot_hyp_trait_network ()
-
 p
+
+
+# # clustering with Walktrap #### ASK SOPHIE
+# 
+# wt_cluster <- cluster_walktrap(
+#   net_hyp_trait,
+#   weights = NULL,
+#   steps = 15,
+#   merges = TRUE,
+#   modularity = TRUE,
+#   membership = TRUE
+# )
+# modularity(wt_cluster)
+# sizes(wt_cluster)
+# is_hierarchical(wt_cluster)
+# 
+# ## S3 method for class 'communities'
+# plot(as.dendrogram(wt_cluster, hang = -1, use.modularity = TRUE))
+# 
+# ## S3 method for class 'communities'
+# plot(as.hclust(wt_cluster, hang = -1, use.modularity = TRUE))
+# plot(as_phylo(wt_cluster), cex = 0.5)
+# 
+# ## S3 method for class 'communities'
+# library(ggraph)
+# layout = layout_nicely(net_hyp_trait)
+# layout = layout.mds(net_hyp_trait)
+# par(mar = c(0,0,0,0))
+# plot(
+#   wt_cluster,
+#   net_hyp_trait,
+#   col = membership(wt_cluster),
+#   mark.groups = communities(wt_cluster),
+#   edge.color = c("black", "red")[crossing(wt_cluster, net_hyp_trait) + 1],
+#   vertex.label.cex =  c(0.4,0.8)[nodes_hyp_trait$layer],
+#   vertex.label.color = c("blue","black")[nodes_hyp_trait$layer],
+#   vertex.shape =  c("circle","rectangle")[nodes_hyp_trait$layer],
+#   vertex.size = c(10,40)[nodes_hyp_trait$layer],
+#   layout = layout
+# )
+# 
+# # Similarity plotting
+
+
+

@@ -1,5 +1,7 @@
 # Visualize network of hypotheses from Enders et al.
 
+# error themes_network_viz.R#43
+
 # Libraries
 require(readr)
 require(igraph)
@@ -40,7 +42,7 @@ nodes_rhrq$type =  c("Hypothesis","Research question")[nodes_rhrq$group+1]
 # give full node names 
 nodes_rhrq$name = theme_rq_mat[match(nodes_rhrq$label,theme_rq_mat$RQ_abb),"Research question"]
 
-nodes_rhrq[is.na(nodes_rhrq$name), "name"] <- hyp_def$Name[
+nodes_rhrq[is.na(nodes_rhrq$name), "name"] <- hyp_def$Hypothesis[
   match(nodes_rhrq$label[is.na(nodes_rhrq$name)],
         hyp_def$Hypothesis)]
 
