@@ -93,7 +93,7 @@ ui <- bootstrapPage(
                                     tags$br(),
                                     h3(textOutput("hyp_description")),
                                     fluidRow(
-                                      column(plotlyOutput('support_piechart', height = "200px"), # TODO FIX colorcoding
+                                      column(plotlyOutput('support_piechart', height = "200px"),
                                              width = 5),
                                       column( p(textOutput("support_summary"), 
                                                 style="text-align:left;color:#27596B;padding:15px;border-radius:10px"),
@@ -193,7 +193,7 @@ server <- function(input, output, session) {
       req(hyp_taxa())
       hyp_taxa() %>% 
         { if (! "All" %in% input$hab) {
-          dplyr::filter(., .detect_items(Habitat, input$hab))} else {.}
+          dplyr::filter(., .detect_items(Habitat_list, input$hab))} else {.}
           }
     })
     
