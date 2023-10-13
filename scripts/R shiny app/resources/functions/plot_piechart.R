@@ -7,7 +7,7 @@ plot_piechart <-  function(df) {
   library(dplyr)
   try(if(is.null(df)) stop("No data"))
 
-  counts <- df %>% count(support_for_hypothesis, sort = FALSE)
+  counts <- df %>% count(support_for_hypothesis, sort = FALSE, .drop = FALSE)
   
 fig <- counts %>% plot_ly(labels = ~support_for_hypothesis, values = ~n)
 fig <- fig %>% add_pie(hole = 0.6,
