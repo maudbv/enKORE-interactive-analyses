@@ -1,7 +1,5 @@
 # Tripartite network for top down representation of themes-RQ-RH
 
-# Visualize network of hypotheses from Enders et al.
-
 # Libraries
 library(readr)
 library(igraph)
@@ -11,32 +9,19 @@ library(visNetwork)
 library(dplyr)
 library(grDevices)
 
-# Import network of 39 hyps by Enders et al.  ####
-rhrq_mat <- readr::read_csv("resources/additional data/RH-RQ.csv")
-rhrq_mat <- as.data.frame(rhrq_mat)
-rownames(rhrq_mat) <- rhrq_mat$Hypothesis
-rhrq_mat <- rhrq_mat[ ,-1]
 
-theme_rq_mat <- as.data.frame(readr::read_csv("resources/additional data/Theme-RQ.csv"))
+# Import data ####
+source("resources/Hypothesis index.R")
 
+# Build the graph objects ####
 
-# check the names of RQ match
-stopifnot(setequal(names(rhrq_mat),theme_rq_mat$RQ_abb))
-
-
-# Hyp attributes
-hyp_def <- as.data.frame(
-  readr::read_csv("resources/additional data/hyp_def.csv",trim_ws = TRUE)
-  )
-
-
-
-# build the graph object ####
-network <- graph_from_incidence_matrix(
+# RQ-Hyp network
+network_hypRQ <- graph_from_incidence_matrix(
   as.matrix(rhrq_mat),
   directed = FALSE,
   mode = "out")
 
+plot(network_hypRQ)
 
 # Theme network
 network_themeRQ <- graph_from_data_frame(
@@ -45,28 +30,19 @@ network_themeRQ <- graph_from_data_frame(
 
 plot(network_themeRQ)
 
-# combine networks
+# combine networks into 3 layers ####
 network_3layers <- igraph::union(a = network_themeRQ , b = network)
-#E(network_3layers)$layer = c(rep(2, 68), rep(1, 9))
 V(network_3layers)$layer = c(rep(1, 4), rep(2, 9), rep(3,39))
 
+# Check that layers match the items:
+plot.igraph(network_3layers,vertex.color=c("firebrick","#009EEE","black")[V(network_3layers)$layer])
+# Create labels
 V(network_3layers)$label = V(network_3layers)$name
 V(network_3layers)$label[1:4] = c("Invasion\nimpacts","Invasion\nsuccess","Introduction\npathways", "Management")
 V(network_3layers)$label <- stringr::str_replace(V(network_3layers)$label, pattern = " ", replacement = "\n")
 
+
 # with igraph ####
-
-# # attempt at plotting with sugiyama layout
-# layoutS = layout_with_sugiyama(network_3layers,
-#                                layers=V(network_3layers)$layer)
-# 
-# plot(network_3layers ,
-#      layout=layoutS,
-#      vertex.color=c("firebrick","#009EEE","black")[V(network_3layers)$layer],
-#      vertex.shape=c("square","rectangle","circle")[V(network_3layers)$layer],
-#      vertex.size=c(50,40,15)[V(network_3layers)$layer],
-#      vertex.label.dist=c(0,0,0)[V(network_3layers)$layer])
-
 
 # Custom layout:
 MyLO = matrix(0, nrow=vcount(network_3layers), ncol=2)
@@ -119,15 +95,22 @@ plot(network_3layers , xlim = c(-0.6, 0.6), ylim = c(-1,1),
      vertex.label.font = c(2,1,1)[V(network_3layers)$layer]
 )
 
-## with bipartite network
-
-web = get.adjacency(network)
-web2 = get.adjacency(network_themeRQ)
-
+## with bipartite network 
 library(bipartite )
-plot(web, web2)
 
-# with vizNetwork
+# extract simple adjacency matrices
+web = rhrq_mat
+web2 = as.matrix(as_adjacency_matrix(network_themeRQ))[-(1:4),1:4]
+
+plotweb(web)
+plotweb(web2)
+
+plotweb2(web, web2,
+         arrow = "down")
+
+# UGLY
+
+# with vizNetwork ####
 # convert to networkD3 DOES nOT work here! Introduces false links...
 # net <- igraph_to_networkD3(network, group = vertex_attr(network)$type)
 
@@ -165,6 +148,10 @@ nodes_3L$name[nodes_3L$type =="Theme"] =  theme_rq_mat[
 
 nodes_3L$label[1:4] <- c("Impact","Success","Pathways","Management")
 
+# define layers:
+
+nodes_3L$level = nodes_3L$llayer
+
 # format vis
 nodes_3L <-  data.frame(
   nodes_3L,
@@ -197,7 +184,7 @@ colnames(edges_3L) <- c("from", "to")
 plot_3L_network <- function(n = nodes_3L, e = edges_3L) {
   
  p <- visNetwork::visNetwork(
-   n ,
+   n,
    e,
    height = "600px",
    width = "100%",
@@ -205,31 +192,37 @@ plot_3L_network <- function(n = nodes_3L, e = edges_3L) {
      text = "Research questions and hypotheses in Invasion Ecology",
      style = "font-family:Roboto slab;color:#0085AF;font-size:18px;text-align:center;")) %>%
    visNodes(
-     font = list(size = 80),
-      
+     font = list(size = 80)
    ) %>%
    visEdges(
      shadow = FALSE,
      color = list(color = "#0085AF", highlight = "#C62F4B")
    ) %>%
-   visOptions(highlightNearest = list(enabled = T, degree = 1, hover = T),
-              autoResize = TRUE,
-              manipulation = FALSE) %>%
-   visPhysics(enabled = FALSE,
-              solver = "forceAtlas2Based", 
-              forceAtlas2Based = list(gravitationalConstant = -200)) %>%
-   visInteraction(navigationButtons = TRUE) %>%
-   visHierarchicalLayout(levelSeparation = 1500,
-                         treeSpacing = 250,
-                         nodeSpacing = 100,
-                         edgeMinimization = FALSE,
-                          shakeTowards = "roots",
-                         parentCentralization = TRUE,
-                         blockShifting = FALSE,
-                         direction = "LR")
+   # visOptions(highlightNearest = list(enabled = T, degree = 1, hover = T),
+   #            autoResize = TRUE,
+   #            manipulation = FALSE) %>%
+
+    visHierarchicalLayout(parentCentralization = FALSE,
+                         levelSeparation = 200 )
  return(p)
 }
 
 p <- plot_3L_network ()
 
 p
+
+
+
+visPhysics(enabled = FALSE,
+           solver = "forceAtlas2Based", 
+           forceAtlas2Based = list(gravitationalConstant = -200)) %>%
+  visInteraction(navigationButtons = TRUE) %>%
+  
+visHierarchicalLayout(levelSeparation = 15000,
+                      treeSpacing = 250,
+                      nodeSpacing = 100,
+                      edgeMinimization = FALSE,
+                      shakeTowards = "roots",
+                      parentCentralization = TRUE,
+                      blockShifting = FALSE,
+                      direction = "LR")

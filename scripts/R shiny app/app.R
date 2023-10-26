@@ -129,7 +129,7 @@ ui <- bootstrapPage(
                            
                            # Panel 2: Filtered data table
                            tabPanel("Data",  
-                           DT::dataTableOutput("filtered_data") #TODO update type of table output for more interaction +add years
+                           DT::DTOutput("filtered_data") #TODO update type of table output for more interaction +add years
                            )
                           )
                         )
@@ -255,14 +255,18 @@ server <- function(input, output, session) {
     plot_barplot(filtered_df(),
                  group_col = "Habitat_list",
                  grouping = habitat_groups,
-                 legend.show = FALSE)
+                 legend.show = TRUE,
+                 title_text = "Habitat"
+                 )
   })
   output$support_methods <- renderPlotly( {
     req(filtered_df())
     plot_barplot(filtered_df(),
                  group_col = "Research_Method",
                  grouping = method_groups,
-                 legend.show = FALSE)
+                 legend.show = FALSE,
+                 title_text = "Research method"
+    )
   })
   
   output$support_taxa <- renderPlotly( {
@@ -270,7 +274,9 @@ server <- function(input, output, session) {
     plot_barplot(filtered_df(),
                  group_col = "taxa_group",
                  grouping =  taxa_groups,
-                 legend.show = FALSE)
+                 legend.show = FALSE,
+                 title_text = "Taxonomic group"
+    )
   })
   
   output$support_continents <- renderPlotly( {
@@ -278,16 +284,34 @@ server <- function(input, output, session) {
     plot_barplot(filtered_df(),
                  group_col = "continents",
                  grouping = continents_vec,
-                 legend.show = FALSE)
+                 legend.show = FALSE,
+                 title_text = "Continent"
+    )
   })
   
   # Data table
-  output$filtered_data = DT::renderDataTable({
+  output$filtered_data = DT::renderDT({
     req(filtered_df())
-    display_columns <- c("support_for_hypothesis","Investigated_species","Habitat","Research_Method", "continents") 
+    display_columns <- c("support_for_hypothesis","Investigated_species","Habitat","Research_Method", "continents","Study_date") 
     df <-  as.data.frame(filtered_df())
     rownames(df) <- df$study
     df <-  df[, display_columns]
+ datatable(df,
+           extensions = 'Buttons',
+           options = list(
+             dom = 'Bfrtip',
+             exportOptions = list(header = ""),
+             buttons = list(
+               list(
+                 extend = "csv", 
+                 filename = 'export',
+                 text = "Download", 
+                 title = NULL
+                 )
+               )
+           )
+ )
+ 
   })
   
   # Martin's network

@@ -4,7 +4,8 @@ plot_barplot <-
   function(df,
            group_col = "Habitat_list",
            grouping = habitat_groups,
-           legend.show = TRUE) {
+           legend.show = TRUE,
+           title_text  = NULL) {
     library(plotly)
     
     names(df)[names(df) == group_col] <-  "grouping_col"
@@ -19,9 +20,10 @@ plot_barplot <-
     
     # count the number of studies in each group and for each type of support
     data_grouped <- group_counts %>%
-      group_by(support) %>%
+      group_by(support,.drop = FALSE) %>%
       summarise(across(.cols = all_of(grouping), ~ sum(.x, na.rm = TRUE)))
     
+ 
     # reformat table for the figure
     library(tidyr)
     data = data_grouped %>%
@@ -55,9 +57,14 @@ plot_barplot <-
      }
   
       
-      fig =   layout(fig,
+      fig <-  layout(fig,
           barmode = 'stack',
-          legend = list(title = list(text = 'Evidence for the hypothesis')),
+          title = list(text = title_text,
+                       font = list(size = 20),
+                       pad = list(b = 0, l = 1, r = 1, t= 1),
+                       x = 0.01,
+                       y = 0.95),
+          legend =  list(text = 'Evidence for the hypothesis'),
           showlegend = legend.show,
           margin = 0.01,
           xaxis = list(title = ""),
