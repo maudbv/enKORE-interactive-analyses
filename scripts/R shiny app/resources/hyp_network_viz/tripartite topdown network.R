@@ -8,7 +8,7 @@ library(ggraph)
 library(visNetwork)
 library(dplyr)
 library(grDevices)
-
+library(tcltk)
 
 # Import data ####
 source("resources/Hypothesis index.R")
@@ -18,29 +18,50 @@ source("resources/Hypothesis index.R")
 # RQ-Hyp network
 network_hypRQ <- graph_from_incidence_matrix(
   as.matrix(rhrq_mat),
-  directed = FALSE,
-  mode = "out")
+  directed = TRUE,
+  mode = "in")
 
 plot(network_hypRQ)
 
 # Theme network
 network_themeRQ <- graph_from_data_frame(
   as.matrix(na.omit(theme_rq_mat[,c("Theme","RQ_abb")])),
-  directed = FALSE)
+  directed = TRUE)
 
 plot(network_themeRQ)
 
 # combine networks into 3 layers ####
-network_3layers <- igraph::union(a = network_themeRQ , b = network)
+network_3layers <- igraph::union(a = network_themeRQ , b = network_hypRQ)
 V(network_3layers)$layer = c(rep(1, 4), rep(2, 9), rep(3,39))
 
-# Check that layers match the items:
-plot.igraph(network_3layers,vertex.color=c("firebrick","#009EEE","black")[V(network_3layers)$layer])
-# Create labels
-V(network_3layers)$label = V(network_3layers)$name
-V(network_3layers)$label[1:4] = c("Invasion\nimpacts","Invasion\nsuccess","Introduction\npathways", "Management")
-V(network_3layers)$label <- stringr::str_replace(V(network_3layers)$label, pattern = " ", replacement = "\n")
+V(network_3layers)[1:4] <- V(network_3layers)[4:1]
 
+# Check that layers match the items:
+plot.igraph(network_3layers,vertex.color=c("firebrick","#009EEE","white")[V(network_3layers)$layer])
+
+# Match hypothesis names
+V(network_3layers)$full_name <- "NA"
+
+V(network_3layers)$full_name[V(network_3layers)$layer == 1] <- 
+  V(network_3layers)$name[V(network_3layers)$layer == 1]
+
+V(network_3layers)$full_name [V(network_3layers)$layer == 2] <-  
+  theme_rq_mat[match(V(network_3layers)$name[V(network_3layers)$layer == 2],
+                     theme_rq_mat$RQ_abb),"Research question"]
+
+V(network_3layers)$full_name[V(network_3layers)$layer == 3] <-  
+  hyp_mat[match(V(network_3layers)$name[V(network_3layers)$layer == 3],
+        hyp_mat$Acronym),"Hypothesis_label"]
+
+# Create labels
+V(network_3layers)$label = V(network_3layers)$full_name
+V(network_3layers)$label[1:4] = c("Introduction\npathways","Invasion\nsuccess","Invasion\nimpacts", "Management")
+V(network_3layers)$label[V(network_3layers)$layer == 2] <- 
+  as.character(theme_rq_mat[match(V(network_3layers)$full_name[V(network_3layers)$layer == 2],  theme_rq_mat$`Research question`),"Research question_2lines"])
+
+# add ltext afjustment?
+V(network_3layers)$adj = 0.5
+V(network_3layers)$adj[V(network_3layers)$layer == 3] <- 0
 
 # with igraph ####
 
@@ -57,116 +78,54 @@ for(i in 1:3) {
   MyLO[ L,2] = (OL-max(OL))/(min(OL)-max(OL))
 }
 
+#horizontal
 # MyLO[,1] = c(3,2,1) [MyLO[,1]] # for changing order of layers
-par(mar = c(0,0,0,0))
-plot(network_3layers ,
-     layout=MyLO[,c(1,2)],
+par(mar = c(0,0,0,4), adj = 0)
+plot.igraph(network_3layers ,
+     layout=MyLO,
      vertex.color=c("lightgrey","coral","black")[V(network_3layers)$layer],
-     vertex.shape=c("circle","rectangle","none")[V(network_3layers)$layer],
-     vertex.size=c(50,60,15)[V(network_3layers)$layer],
-     vertex.label = V(network_3layers)$label,
-     vertex.label.dist = c(0,0,0)[V(network_3layers)$layer],
-     vertex.label.degree = c(0,0,pi)[V(network_3layers)$layer],
-     vertex.label.cex = c(1,0.8,0.8)[V(network_3layers)$layer],
+     vertex.shape=c("none","rectangle","none")[V(network_3layers)$layer],
+     vertex.size=c(30,60,15)[V(network_3layers)$layer],
+     vertex.label = gsub("\\\\n", "\n", V(network_3layers)$label),
+     vertex.label.dist = c(-3,-3.5,0)[V(network_3layers)$layer],
+     vertex.label.degree = c(0,0,0)[V(network_3layers)$layer],
+     vertex.label.cex = c(0.8,0.5,0.5)[V(network_3layers)$layer],
      vertex.label.color = "black",
      # vertex.label.family = "Roboto slab",
      vertex.label.family = "Helvetica",
-     vertex.label.font = c(2,1,1)[V(network_3layers)$layer]
+     vertex.label.font = c(2,1,1)[V(network_3layers)$layer],
+     edge.arrow.size = 0
      )
 
-
-
-
-MyLO_vert <- MyLO[,c(2,1)]
-MyLO_vert[,2] = c(3,2,1) [MyLO_vert[,2]] # for changing order of layers
-MyLO_vert[,1] <-MyLO_vert[,1] *3
-par(mar = c(0,0,0,0))
-plot(network_3layers , xlim = c(-0.6, 0.6), ylim = c(-1,1),
-     layout= MyLO_vert,
-     vertex.color=c("lightgrey","coral","black")[V(network_3layers)$layer],
-     vertex.shape=c("circle","rectangle","none")[V(network_3layers)$layer],
-     vertex.size=c(30,20,15)[V(network_3layers)$layer],
-     vertex.label = V(network_3layers)$label,
-     vertex.label.dist = c(0,0,0)[V(network_3layers)$layer],
-     vertex.label.cex = c(0.8,0.7,0.5)[V(network_3layers)$layer],
-     vertex.label.color = "black",
-     # vertex.label.family = "Roboto slab",
-     vertex.label.family = "Helvetica",
-     vertex.label.font = c(2,1,1)[V(network_3layers)$layer]
-)
-
-## with bipartite network 
-library(bipartite )
-
-# extract simple adjacency matrices
-web = rhrq_mat
-web2 = as.matrix(as_adjacency_matrix(network_themeRQ))[-(1:4),1:4]
-
-plotweb(web)
-plotweb(web2)
-
-plotweb2(web, web2,
-         arrow = "down")
-
-# UGLY
-
-# with vizNetwork ####
-# convert to networkD3 DOES nOT work here! Introduces false links...
-# net <- igraph_to_networkD3(network, group = vertex_attr(network)$type)
-
+# VisNetwork  #########
 #nodes_3L
 nodes_3L <- data.frame(
   id = 1 : length(vertex_attr(network_3layers)$name),
   as.data.frame(vertex_attr(network_3layers))[,-1]
   )
 
-nodes_3L <- rename(nodes_3L, label = name )
 
 # type of node
 
 nodes_3L$type =  c("Theme", "Research question","Hypothesis")[nodes_3L$layer]
 
-# give full node names 
-nodes_3L$name <- "NA"
-nodes_3L$name[nodes_3L$type =="Research question"] =  theme_rq_mat[
-  match(nodes_3L$label[nodes_3L$type =="Research question"],
-        theme_rq_mat$RQ_abb),
-  "Research question"]
-
-nodes_3L$name[nodes_3L$type =="Hypothesis"] =  hyp_def[
-  match(nodes_3L$label[nodes_3L$type =="Hypothesis"],
-        hyp_def$Hypothesis),
-  "Name"]
-
-
-nodes_3L$name[nodes_3L$type =="Theme"] =  theme_rq_mat[
-  match(nodes_3L$label[nodes_3L$type =="Theme"],
-        theme_rq_mat$RQ_abb),
-  "Theme"]
-
-# simplify theme labels
-
-nodes_3L$label[1:4] <- c("Impact","Success","Pathways","Management")
-
-# define layers:
-
-nodes_3L$level = nodes_3L$llayer
+nodes_3L$level = nodes_3L$layer
 
 # format vis
 nodes_3L <-  data.frame(
   nodes_3L,
   # control shape of nodes_3L
-  shape = c("square","ellipse", "ellipse")[nodes_3L$layer],
+  shape = c("box","box", "box")[nodes_3L$layer],
   # tooltip (html or character), when the mouse is above
   title = paste0("<p><i>",
                  nodes_3L$type,
                  "</i><br><b>",
-                 nodes_3L$name,
+                 nodes_3L$full_name,
                  "</b><br> </p>"
                  ),
   
   # color
-  color = c("firebrick","#0085AF", "white")[nodes_3L$layer],
+  color = c("grey","coral", "white")[nodes_3L$layer],
   
   # texf format
   font.color = c("black", "black","black")[nodes_3L$layer], 
@@ -192,18 +151,28 @@ plot_3L_network <- function(n = nodes_3L, e = edges_3L) {
      text = "Research questions and hypotheses in Invasion Ecology",
      style = "font-family:Roboto slab;color:#0085AF;font-size:18px;text-align:center;")) %>%
    visNodes(
-     font = list(size = 80)
+     font = list(size = 50)
    ) %>%
    visEdges(
      shadow = FALSE,
      color = list(color = "#0085AF", highlight = "#C62F4B")
-   ) %>%
-   # visOptions(highlightNearest = list(enabled = T, degree = 1, hover = T),
-   #            autoResize = TRUE,
-   #            manipulation = FALSE) %>%
+   ) %>% 
+   visPhysics(enabled = FALSE,
+              solver = "forceAtlas2Based", 
+              forceAtlas2Based = list(gravitationalConstant = -200)) %>%
+   visInteraction(navigationButtons = FALSE) %>%
+   visOptions(highlightNearest = list(enabled = T, degree = 1, hover = T),
+              autoResize = TRUE,
+              manipulation = FALSE) %>%
 
-    visHierarchicalLayout(parentCentralization = FALSE,
-                         levelSeparation = 200 )
+   visHierarchicalLayout(levelSeparation = 1000,
+                         treeSpacing = 100,
+                         nodeSpacing = 100,
+                         edgeMinimization = FALSE,
+                         shakeTowards = "roots",
+                         parentCentralization = TRUE,
+                         blockShifting = TRUE,
+                         direction = "LR")
  return(p)
 }
 
@@ -213,10 +182,6 @@ p
 
 
 
-visPhysics(enabled = FALSE,
-           solver = "forceAtlas2Based", 
-           forceAtlas2Based = list(gravitationalConstant = -200)) %>%
-  visInteraction(navigationButtons = TRUE) %>%
   
 visHierarchicalLayout(levelSeparation = 15000,
                       treeSpacing = 250,

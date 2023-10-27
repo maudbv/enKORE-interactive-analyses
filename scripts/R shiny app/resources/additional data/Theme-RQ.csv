@@ -1,10 +1,10 @@
-Theme,Research question,RQ_ID,RQ_abb
-Impacts of invasion,What determines the impact(s) of non-native species?,R1.1,Impact determinants
-Impacts of invasion,What are the impacts of non-native species?,R1.2,Impact size
-Impacts of invasion,Which taxa are impactful invaders?,R1.3,Impactful taxa
-Invasion success (establishment & spread) & invasibility,What determines the invasibility of ecosystems?,R2.1,Invasibility
-Invasion success (establishment & spread) & invasibility,What determines the invasion success of non-native species?,R2.2,Invasion success
-Pathways and conditions of introduction,What are the introduction pathways of non-native species?,R3.1,Pathways
-Pathways and conditions of introduction,what determines a successful introduction of non-native species?,R3.2,Introduction success
-Managing biological invasions,How can we successfully control invasive species?,R4.1,Control
-Managing biological invasions,How can we mitigate the impact of invasive species?,R4.2,Impact mitigation
+﻿Theme,Theme_2lines,Research question,RQ_ID,RQ_abb,Research question_2lines
+Pathways and conditions of introduction,Introduction\npathways,What are the introduction pathways of non-native species?,R1.1,Pathways,What are the introduction pathways\nof non-native species?
+Pathways and conditions of introduction,Introduction\npathways,what determines a successful introduction of non-native species?,R1.2,Introduction success,what determines a successful introduction\n of non-native species?
+Invasion success (establishment & spread) & invasibility,Invasion\nsuccess,What determines the invasibility of ecosystems?,R2.1,Invasibility,What determines the invasibility\nof ecosystems?
+Invasion success (establishment & spread) & invasibility,Invasion\nsuccess,What determines the invasion success of non-native species?,R2.2,Invasion success,What determines the invasion success\nof non-native species?
+Impacts of invasion,Invasion\nimpacts,What determines the impact(s) of non-native species?,R3.1,Impact determinants,What determines the impact(s)\nof non-native species?
+Impacts of invasion,Invasion\nimpacts,What are the impacts of non-native species?,R3.2,Impact size,What are the impacts\nof non-native species?
+Impacts of invasion,Invasion\nimpacts,Which taxa are impactful invaders?,R3.3,Impactful taxa,Which taxa are impactful\ninvaders?
+Managing biological invasions,Management,How can we successfully control invasive species?,R4.1,Control,How can we successfully control\ninvasive species?
+Managing biological invasions,Management,How can we mitigate the impact of invasive species?,R4.2,Impact mitigation,How can we mitigate the impact\nof invasive species?
