@@ -24,6 +24,7 @@ rownames(hyp_mat) <- hyp_mat$Acronym # OK
 rhrq_mat <- readr::read_csv("resources/additional data/RH-RQ.csv")
 theme_rq_mat <- as.data.frame(readr::read_csv("resources/additional data/Theme-RQ.csv"),escape_double =FALSE)
 
+
 # check and update acronyms of hypotheses in rhrq
 rhrq_mat$Hypothesis <- hyp_mat$Acronym[ match( rhrq_mat$Hypothesis, hyp_mat$Old_acronym ) ]
 

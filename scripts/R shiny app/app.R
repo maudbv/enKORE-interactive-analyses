@@ -28,6 +28,7 @@ source("resources/Hypothesis index.R")
 source('resources/data processing.R')
 source("resources/hyp_network_viz/martin_network_viz.R")
 source("resources/hyp_network_viz/themes_network_viz.R")
+source("resources/hyp_network_viz/tripartite topdown network.R")
 # source("resources/functions/plot_network.R")
 
 # Get colours and style themes ####
@@ -139,16 +140,25 @@ ui <- bootstrapPage(
             tabPanel("Hypothesis Networks",
                      tabsetPanel(
                          
-                      # Panel 1: Organisation by Research hypotheses
-                      tabPanel("Research questions",
+                      # # Panel 1: Organisation by Research hypotheses
+                      # tabPanel("Research questions",
+                      #          fluidRow( 
+                      #            column(visNetworkOutput("rhrq_network"),
+                      #                   width = 12,
+                      #                   height = 10)),
+                      #          tags$br(),
+                      #          "Bipartite network illustrating the distribution of hypotheses among eight major research questions in invasion biology. The network is based on ongoing expert assessment and classification of hypotheses within the enKORE project"),
+                      # 
+                      # Panel 2: Tripartite network
+                      tabPanel("Conceptual scheme",
                                fluidRow( 
-                                 column(visNetworkOutput("rhrq_network"),
+                                 column(visNetworkOutput("tripartite_network"),
                                         width = 12,
                                         height = 10)),
                                tags$br(),
-                               "Bipartite network illustrating the distribution of hypotheses among eight major research questions in invasion biology. The network is based on ongoing expert assessment and classification of hypotheses within the enKORE project"),
+                               "Hierarchical scheme illustrating the distribution of hypotheses among nine major research questions and four themes in invasion biology. The network is based on ongoing expert assessment and classification of hypotheses within the enKORE project"),
                       
-                      # Panel 2: Martin Ender's network
+                      # Panel 3: Martin Ender's network
                       tabPanel("Similarity network",
                                fluidRow( 
                                  column(visNetworkOutput("martin_network"),
@@ -323,6 +333,13 @@ server <- function(input, output, session) {
   output$rhrq_network <- renderVisNetwork({
     plot_rhrq_network(nodes_rhrq, edges_rhrq)
   })
+  
+  # RHRQ network of hypotheses
+  output$tripartite_network<- renderVisNetwork({
+    plot_3L_network(nodes_3L, edges_3L)
+  })
 }
+
+
 
 shinyApp(ui = ui, server = server)
