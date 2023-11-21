@@ -196,3 +196,19 @@ habitat_groups <- sort(unique(tolower(unlist(total_df$Habitat_list))))
 method_groups <- sort(unique(tolower(unlist(total_df$Research_Method))))
 continents_vec<- sort(unique(unlist(total_df$continents)))
 
+# RE-label the hypotheses
+total_df$hypothesis_old <- total_df$hypothesis
+
+hyp_labels <- data.frame(old_label = unique(total_df$hypothesis),
+                         new_label = c("Disturbance hypothesis",
+                                       "Biotic resistance hypothesis",
+                                       "Enemy release hypothesis",
+                                       "Island susceptibility hypothesis",
+                                       "Phenotypic plasticity hypothesis",
+                                       "Invasional meltdown hypothesis",
+                                       "Tens rule",
+                                       "Darwin's naturalisation hypothesis",
+                                       "Propagule pressure hypothesis",
+                                       "Limiting similarity hypothesis")
+)
+total_df$hypothesis <- hyp_labels$new_label[match(total_df$hypothesis_old, hyp_labels$old_label)]

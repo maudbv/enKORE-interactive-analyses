@@ -149,12 +149,9 @@ colnames(edges_martin ) <- c("from", "to")
 
 # Plot network ####
 
-plot_martin_network <-  function(n = nodes_martin, e = edges_martin,
-                            w = "100%") {
+plot_martin_network <-  function(n = nodes_martin, e = edges_martin) {
   p <-  visNetwork(nodes = n,
                    edges = e,
-                   height = "600px",
-                   weight = w,
                    main = list(
       text = "Similarity among hypotheses in Invasion Ecology",
       style = "font-family:Roboto slab;color:#0085AF;font-size:18px;text-align:center;"),
@@ -175,13 +172,11 @@ plot_martin_network <-  function(n = nodes_martin, e = edges_martin,
     font = list(size = 40)
   ) %>% 
   visOptions(highlightNearest = list(enabled = T, degree = 1, hover = T),
-             #selectedBy = list(variable = "name", main = "Select hypothesis"),
+             selectedBy = list(variable = "group", main = "Select cluster"),
              autoResize = TRUE) %>%
-  visPhysics(stabilization = FALSE) %>%
-  visLayout(randomSeed = 11) 
+  visPhysics(stabilization = FALSE) 
 
 return(p)
 }
 
-plot_martin_network ()%>%
-  visLegend()
+plot_martin_network ()
