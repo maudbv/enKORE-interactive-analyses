@@ -151,23 +151,20 @@ ui <- bootstrapPage(
                       # 
                       # Panel 2: Tripartite network
                       tabPanel("Conceptual scheme",
-                               fluidRow( 
-                                 column(visNetworkOutput("tripartite_network"),
-                                        width = 12,
-                                        height = 10)),
+                               visNetworkOutput("tripartite_network",width = "auto",height = "700px"),
                                tags$br(),
-                               "Hierarchical scheme illustrating the distribution of hypotheses among nine major research questions and four themes in invasion biology. The network is based on ongoing expert assessment and classification of hypotheses within the enKORE project"),
+                               HTML('<a style="text-decoration:none;cursor:default;color:#808080" href="#">Hierarchical scheme illustrating the distribution of hypotheses among nine major research questions and four themes in invasion biology. The network is based on ongoing expert assessment and classification of hypotheses within the enKORE project</a>'),
+                               tags$br()
+                      ),
                       
                       # Panel 3: Martin Ender's network
                       tabPanel("Similarity network",
-                               fluidRow( 
-                                 column(visNetworkOutput("martin_network"),
-                                        width = 12,
-                                        height = 10)),
+                                 visNetworkOutput("martin_network",width = "auto",height = "700px"),
                                tags$br(),
-                               "Network of similarity between 39 hypotheses according to Enders et al. 2020, Global Ecology and Biogeography")
-                      
-                      )),
+                               "Network of similarity between 39 hypotheses according to Enders et al. 2020, Global Ecology and Biogeography"),
+                      tags$br()
+                      )
+                     ),
 
              # Third page: about the project
              tabPanel("About the project",
@@ -329,12 +326,12 @@ server <- function(input, output, session) {
     plot_martin_network(nodes_martin, edges_martin)
   })
   
-  # RHRQ network of hypotheses
-  output$rhrq_network <- renderVisNetwork({
-    plot_rhrq_network(nodes_rhrq, edges_rhrq)
-  })
+  # # RHRQ network of hypotheses
+  # output$rhrq_network <- renderVisNetwork({
+  #   plot_rhrq_network(nodes_rhrq, edges_rhrq)
+  # })
   
-  # RHRQ network of hypotheses
+  # tripartite network of hypotheses
   output$tripartite_network<- renderVisNetwork({
     plot_3L_network(nodes_3L, edges_3L)
   })

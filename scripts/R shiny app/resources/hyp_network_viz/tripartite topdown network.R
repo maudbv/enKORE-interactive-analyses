@@ -21,23 +21,23 @@ network_hypRQ <- graph_from_incidence_matrix(
   directed = TRUE,
   mode = "in")
 
-plot(network_hypRQ)
+# plot(network_hypRQ)
 
 # Theme network
 network_themeRQ <- graph_from_data_frame(
   as.matrix(na.omit(theme_rq_mat[,c("Theme","RQ_abb")])),
   directed = TRUE)
 
-plot(network_themeRQ)
+# plot(network_themeRQ)
 
 # combine networks into 3 layers ####
 network_3layers <- igraph::union(a = network_themeRQ , b = network_hypRQ)
 V(network_3layers)$layer = c(rep(1, 4), rep(2, 9), rep(3,39))
 
 
-# Check that layers match the items:
-plot.igraph(network_3layers,
-            vertex.color=c("firebrick","#009EEE","white")[V(network_3layers)$layer],)
+# # Check that layers match the items:
+# plot.igraph(network_3layers,
+#             vertex.color=c("firebrick","#009EEE","white")[V(network_3layers)$layer],)
 
 # Match hypothesis names
 V(network_3layers)$full_name <- "NA"
@@ -51,6 +51,13 @@ V(network_3layers)$full_name [V(network_3layers)$layer == 2] <-
 V(network_3layers)$full_name[V(network_3layers)$layer == 3] <-  
   hyp_mat[match(V(network_3layers)$name[V(network_3layers)$layer == 3],
         hyp_mat$Acronym),"Hypothesis_label"]
+
+V(network_3layers)$def[V(network_3layers)$layer == 3] <-  
+  hyp_mat[match(V(network_3layers)$name[V(network_3layers)$layer == 3],
+                hyp_mat$Acronym),"Definition"]
+
+V(network_3layers)$def[V(network_3layers)$layer == 1] <- ""
+V(network_3layers)$def[V(network_3layers)$layer == 2] <- ""
 
 # Create labels
 V(network_3layers)$label = V(network_3layers)$full_name
@@ -89,15 +96,28 @@ nodes_3L$shadow = FALSE
 nodes_3L$font.align = c("center", "center", "left")[nodes_3L$level]
 
 # tooltip (html or character), when the mouse is above
-nodes_3L$title = paste0("<p><i>",
+# nodes_3L$title = paste0("<p><i>",
+#                         nodes_3L$type,
+#                         "</i><br><b>",
+#                         nodes_3L$full_name,
+#                         "</b><br> </p>",
+#                         nodes_3L$def,
+#                         "</b><br> </p>"
+# )
+
+
+nodes_3L$title = paste0("<p style=\"display: block; word-wrap:break-word;  width:350px; white-space: normal\"> <i>",
                         nodes_3L$type,
                         "</i><br><b>",
                         nodes_3L$full_name,
+                        "</b><br>",
+                        nodes_3L$def,
                         "</b><br> </p>"
 )
 
+
 # correct labels to be displayed with line returns
-nodes_3L$label = gsub("\\\\n", "\n", n$label)
+nodes_3L$label = gsub("\\\\n", "\n", nodes_3L$label)
 
 
 #Edges
@@ -130,17 +150,15 @@ plot_3L_network <- function(n = nodes_3L, e = edges_3L) {
  p <- visNetwork::visNetwork(
    n,
    e,
-   height = "800px",
-   margin = -0.2,
-   width = "100%",
    main = list(
-     text = "Research questions and hypotheses in Invasion Ecology",
-     style = "font-family:Roboto slab;color:#0085AF;font-size:18px;text-align:center;")) %>%
+     text = "Conceptual scheme for Invasion Ecology",
+     style = "font-family:Roboto slab;color:#0085AF;font-size:18px;text-align:center;"),
+   margin = -0.2) %>%
    visEdges(
      shadow = FALSE,
      color = list(color = "#0085AF", highlight = "#C62F4B")
    ) %>%
-   visOptions(highlightNearest = list(enabled = T, degree = 1, hover = T),
+   visOptions(highlightNearest = list(enabled = T, degree = 1, hover = FALSE),
               autoResize = FALSE,
               manipulation = FALSE) %>%
    visInteraction(navigationButtons = TRUE) %>%
@@ -159,7 +177,7 @@ plot_3L_network <- function(n = nodes_3L, e = edges_3L) {
                 nodeDistance = 100,
                 avoidOverlap = 0.3)) %>%
    visEvents(type = "once", startStabilizing = "function() {
-            this.moveTo({scale:1.3})}") 
+            this.moveTo({scale:1.2})}") 
 
    # visHierarchicalLayout(levelSeparation = 1400,
    #                       nodeSpacing = 100,
@@ -173,8 +191,7 @@ plot_3L_network <- function(n = nodes_3L, e = edges_3L) {
 
 return(p)
 }
-# 
-# (p <- plot_3L_network ()) 
+(p <- plot_3L_network ()) 
 
 
 
