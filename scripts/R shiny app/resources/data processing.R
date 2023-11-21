@@ -65,7 +65,12 @@ total_df$support_for_hypothesis <- factor(total_df$support_for_hypothesis,
 total_df$hypothesis <- str_replace(string = total_df$hypothesis,
                                    pattern = "Biotic resistence",
                                    replacement = "Biotic resistance")
-  
+
+# check for duplicate rows
+
+total_df$index[which(duplicated(total_df$index))] <- paste( total_df$index[which(duplicated(total_df$index))],
+                                                            "a", sep = "")
+
 # Homogenize continent information ####
 total_df$Continent_old <-  total_df$Continent
 

@@ -301,7 +301,7 @@ server <- function(input, output, session) {
     req(filtered_df())
     display_columns <- c("support_for_hypothesis","Investigated_species","Habitat","Research_Method", "continents","Study_date") 
     df <-  as.data.frame(filtered_df())
-    rownames(df) <- df$study
+    rownames(df) <- df$index
     df <-  df[, display_columns]
  datatable(df,
            extensions = 'Buttons',
