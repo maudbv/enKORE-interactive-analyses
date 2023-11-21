@@ -180,3 +180,4 @@ return(p)
 }
 
 plot_martin_network ()
+#### STILL NEED TO ADD NEGATIVE LINKSIN RED!

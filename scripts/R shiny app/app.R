@@ -319,7 +319,7 @@ server <- function(input, output, session) {
            )
  )
  
-  })
+  },            server = FALSE)
   
   # Martin's network
   output$martin_network <- renderVisNetwork({
