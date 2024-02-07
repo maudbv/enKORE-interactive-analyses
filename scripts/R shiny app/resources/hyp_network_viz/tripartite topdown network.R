@@ -194,7 +194,22 @@ return(p)
 (p <- plot_3L_network ()) 
 
 
+write.csv(nodes_3L, "nodes_3L.csv")
+write.csv(edges_3L, "edges_3L.csv")
 
+library(jsonify)
+library(jsonlite)
+
+
+
+data <- list(nodes = nodes_3L,
+            links = edges_3L %>% rename(source = from, target = to)
+            )
+
+toJSON(edges_3L)
+jsonData <- toJSON(data)
+data <- fromJSON(jsonData)
+write(jsonData, 'jsonData.json')
 # # Horizontal plot with igraph ####
 # 
 # # Custom layout:

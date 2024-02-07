@@ -168,10 +168,10 @@ ui <- bootstrapPage(
 
              # Third page: about the project
              tabPanel("About the project",
-                      "This is a work in progress from the enKORE project, funded by the Volkswagen Stiftung, Germany.",
+                      "This is a beta version of interactive visualiaztions for the enKORE project, funded by the Volkswagen Stiftung, Germany.",
                       tags$br(),
                       tags$br(),
-                      'This interactive website was built using R shiny, with data from the 2018 book "Invasion biology: hypotheses and evidence", by Jeschke & Heger (eds), and currently curated by the', tags$a(href="https://orkg.org", " Open Research Knowledge Graph project"),'.'
+                      'This interactive website was built by Maud Bernard-Verdier using R shiny, with data from the 2018 book "Invasion biology: hypotheses and evidence", by Jeschke & Heger (eds), and currently curated by the', tags$a(href="https://orkg.org", " Open Research Knowledge Graph project"),'. It also integrates data from the 2020 article by Enders et al. which can be found here:', tags$a(href="https://doi.org/10.1111/geb.13082", "https://doi.org/10.1111/geb.13082"),'.'
              )
   )
 )
@@ -245,7 +245,7 @@ server <- function(input, output, session) {
   
   # comments
   output$hyp_description <- renderText({
-    paste(input$hyp,"hypothesis")
+    paste(input$hyp)
   })
   
   output$support_summary <- renderText({
